@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "/Users/sw/Sites/froide/src/fragdenstaat_de/fds-env/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true
+}

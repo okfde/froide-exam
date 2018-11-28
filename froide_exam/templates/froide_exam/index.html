@@ -1,0 +1,36 @@
+{% extends "froide_exam/base.html" %}
+
+{% load static %}
+
+
+{% block main %}
+<h2>Jetzt geht's Abi</h2>
+
+<div class="responsive-table">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+          Bundesland
+        </th>
+        <th>
+          ?
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for juris in jurisdictions %}
+        <tr>
+          <th>
+            <a href="{% url 'exam-jurisdiction' jurisdiction_slug=juris.slug %}">
+              {{ juris.name }}
+            </a>
+          </th>
+          <td>?</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
