@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from froide.publicbody.models import Jurisdiction, PublicBody
 
 from .models import Curriculum, ExamRequest
-from .utils import SubjectYear, MIN_YEAR, YEARS
+from .utils import SubjectYear, MAX_YEAR, YEARS
 
 
 def index(request):
@@ -35,8 +35,11 @@ def jurisdiction_view(request, jurisdiction_slug=None):
     subjects = functools.reduce(lambda a, b: a | b, set(
         c.subjects.all() for c in curricula))
     subjects = sorted(subjects, key=lambda x: x.name)
+
+    display_years = list(reversed(YEARS))
+
     for s in subjects:
-        s.years = [SubjectYear(subject=s, year=year) for year in YEARS]
+        s.years = [SubjectYear(subject=s, year=year) for year in display_years]
 
     exam_requests = ExamRequest.objects.filter(
         curriculum_id__in=curricula
@@ -65,13 +68,15 @@ def jurisdiction_view(request, jurisdiction_slug=None):
 
     for subject in subjects:
         for year in YEARS:
-            index = year - MIN_YEAR
+            # This gets the index into reversed years array
+            # [2018, 2017, 2016, ...]
+            index = abs(year - MAX_YEAR)
             subject_year = subject.years[index]
             subject_year.exam_requests = exam_request_map[(subject.id, year)]
             subject_year.curricula = cu_map[(subject.id, year)]
 
     return render(request, 'froide_exam/jurisdiction.html', {
-        'years': list(reversed(YEARS)),
+        'years': display_years,
         'juris': juris,
         'subjects': subjects,
     })
