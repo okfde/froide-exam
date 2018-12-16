@@ -8,7 +8,10 @@ def connect_request_object(sender, **kwargs):
         return
     if not reference.startswith(REFERENCE_NAMESPACE):
         return
-    namespace, curriculum_id, subject_id, year = reference.split(':', 1)
+    try:
+        namespace, curriculum_id, subject_id, year = reference.split(':', 3)
+    except ValueError:
+        return
 
     try:
         subject = Subject.objects.get(pk=subject_id)
