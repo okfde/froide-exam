@@ -34,9 +34,15 @@
                 <ul class="list-unstyled">
                   {% for exam_request in subject_year.exam_requests %}
                     <li>
-                      <a href="{{ exam_request.foirequest.get_absolute_url }}">
-                        Zur Anfrage
-                      </a>
+                      {% if exam_request.url %}
+                        <a href="{{ exam_request.url }}">
+                          zu den Unterlagen
+                        </a>
+                      {% else %}
+                        <a href="{{ exam_request.foirequest.get_absolute_url }}">
+                          Zur Anfrage
+                        </a>
+                      {% endif %}
                     </li>
                   {% endfor %}
                 </ul>
