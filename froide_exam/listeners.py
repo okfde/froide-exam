@@ -1,3 +1,6 @@
+from datetime import datetime
+from django.utils import timezone
+
 from .models import ExamRequest, Subject, Curriculum
 from .utils import REFERENCE_NAMESPACE
 
@@ -30,10 +33,12 @@ def connect_request_object(sender, **kwargs):
     except ValueError:
         return
 
+    year_date = timezone.make_aware(datetime(year, 1, 1))
+
     venue, _ = ExamRequest.objects.get_or_create(
         curriculum=curriculum,
         subject=subject,
-        year=year,
+        year=year_date,
         defaults={
             'timestamp': sender.first_message,
             'foirequest': sender,
