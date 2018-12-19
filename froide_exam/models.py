@@ -8,6 +8,14 @@ from froide.foirequest.models import FoiRequest
 from .utils import MIN_YEAR, MAX_YEAR
 
 
+LEGAL_STATUS_CHOICES = (
+    ('request', _('Anfragbar')),
+    ('request_not_publish', _('Anfragbar (nicht veröffentlichbar)')),
+    ('public', _('Schon öffentlich')),
+    ('unrequestable', _('Nicht anfragbar')),
+)
+
+
 class Subject(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -34,6 +42,11 @@ class Curriculum(models.Model):
     kind = models.CharField(max_length=100, choices=(
         ('abitur', _('Abitur')),
     ))
+    legal_status = models.CharField(
+        max_length=100,
+        choices=LEGAL_STATUS_CHOICES,
+        default='request'
+    )
 
     subjects = models.ManyToManyField(Subject)
 
@@ -52,6 +65,9 @@ class Curriculum(models.Model):
     def is_valid_year(self, year):
         min_year, max_year = self.get_min_max_year()
         return min_year <= year <= max_year
+
+    def needs_request(self):
+        return self.legal_status.startswith('request')
 
 
 class ExamRequest(models.Model):
