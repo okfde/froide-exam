@@ -41,9 +41,11 @@
                   {% endfor %}
                 </ul>
               {% else %}
-                <a href="{{ subject_year.make_request_url }}" class="btn btn-primary btn-sm">
-                  Anfragen!
-                </a>
+                {% if subject_year.make_request_url %}
+                  <a href="{{ subject_year.make_request_url }}" class="btn btn-primary btn-sm">
+                    Anfragen!
+                  </a>
+                {% endif %}
               {% endif %}
             </td>
           {% endfor %}

@@ -31,6 +31,10 @@ class SubjectYear(object):
         )
 
     def make_request_url(self):
+        if not self.curricula:
+            return
+        if hasattr(self, '_request_url'):
+            return self._request_url
         curriculum = self.curricula[0]
 
         pb_slug = curriculum.publicbody.slug
@@ -62,4 +66,5 @@ class SubjectYear(object):
         )
         query.update({f: b'1' for f in hide_features})
         query = urlencode(query)
-        return '%s?%s' % (url, query)
+        self._request_url = '%s?%s' % (url, query)
+        return self._request_url
