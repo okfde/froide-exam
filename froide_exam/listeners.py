@@ -38,7 +38,7 @@ def connect_request_object(sender, **kwargs):
     venue, _ = ExamRequest.objects.get_or_create(
         curriculum=curriculum,
         subject=subject,
-        year=year_date,
+        start_year=year_date,
         defaults={
             'timestamp': sender.first_message,
             'foirequest': sender,

@@ -46,7 +46,8 @@ def jurisdiction_view(request, jurisdiction_slug=None):
     ).select_related('foirequest')
     exam_request_map = defaultdict(list)
     for er in exam_requests:
-        exam_request_map[(er.subject_id, er.year.year)].append(er)
+        for year in er.get_years():
+            exam_request_map[(er.subject_id, year)].append(er)
 
     default_pb = None
 

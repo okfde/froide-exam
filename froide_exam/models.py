@@ -59,15 +59,22 @@ class ExamRequest(models.Model):
         Subject, null=True, blank=True,
         on_delete=models.SET_NULL
     )
-    year = models.DateField()
+    start_year = models.DateField()
+    end_year = models.DateField(null=True, blank=True)
     curriculum = models.ForeignKey(
         Curriculum, null=True, blank=True,
         on_delete=models.SET_NULL
     )
 
-    timestamp = models.DateTimeField(default=timezone.now)
+    url = models.URLField(blank=True)
+    timestamp = models.DateTimeField(
+        blank=True, null=True,
+        default=timezone.now
+    )
     foirequest = models.ForeignKey(
-        FoiRequest, on_delete=models.CASCADE
+        FoiRequest,
+        null=True, blank=True,
+        on_delete=models.CASCADE
     )
 
     class Meta:
@@ -78,6 +85,11 @@ class ExamRequest(models.Model):
     def __str__(self):
         return '{subject} {year} {curriculum}'.format(
             subject=self.subject,
-            year=self.year,
+            year=self.get_years(),
             curriculum=self.curriculum
         )
+
+    def get_years(self):
+        if self.end_year is not None:
+            return list(range(self.start_year.year, self.end_year.year + 1))
+        return [self.start_year.year]
