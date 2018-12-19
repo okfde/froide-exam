@@ -30,6 +30,18 @@ class SubjectYear(object):
             year=self.year
         )
 
+    def can_request(self):
+        if not self.curricula:
+            return
+        curriculum = self.curricula[0]
+        if not curriculum.needs_request():
+            return False
+        if not self.exam_requests:
+            return True
+        if curriculum.legal_status == 'request':
+            return False
+        return True
+
     def make_request_url(self):
         if not self.curricula:
             return

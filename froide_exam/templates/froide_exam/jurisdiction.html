@@ -46,11 +46,14 @@
                     </li>
                   {% endfor %}
                 </ul>
+              {% endif %}
+              {% if subject_year.can_request %}
+                <a href="{{ subject_year.make_request_url }}" class="btn btn-primary btn-sm">
+                  Anfragen!
+                </a>
               {% else %}
-                {% if subject_year.make_request_url %}
-                  <a href="{{ subject_year.make_request_url }}" class="btn btn-primary btn-sm">
-                    Anfragen!
-                  </a>
+                {% if not subject_year.exam_requests %}
+                  nicht anfragbar
                 {% endif %}
               {% endif %}
             </td>
