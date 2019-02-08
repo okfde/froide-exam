@@ -55,17 +55,23 @@ class SubjectYear(object):
         })
         kind = curriculum.get_kind_display()
         subject = ('{kind}-Aufgaben im Fach {subject} '
-                   'im Jahr {year}'.format(
+                   'im Jahr {year} in {name}'.format(
                     kind=kind,
                     subject=self.subject,
                     year=self.year,
+                    name=curriculum.name,
                     ))
         if len(subject) > 250:
             subject = subject[:250] + '...'
         body = (
             'Die Aufgaben, Erwartungshorizonte und Lösungen für die '
-            '{kind}-Prüfung im Fach {subject} aus dem Jahr {year}.'
-        ).format(subject=self.subject, year=self.year, kind=kind)
+            '{kind}-Prüfung im Fach {subject} aus dem Jahr {year} in {name}.'
+        ).format(
+                subject=self.subject,
+                year=self.year,
+                kind=kind,
+                name=curriculum.name
+        )
         ref = self.get_reference(curriculum)
         query = {
             'subject': subject.encode('utf-8'),
