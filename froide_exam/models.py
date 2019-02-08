@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django.urls import reverse
+
+from cms.models.fields import PlaceholderField
 
 from froide.publicbody.models import PublicBody, Jurisdiction
 from froide.foirequest.models import FoiRequest
@@ -30,8 +33,13 @@ class Subject(models.Model):
 
 class Curriculum(models.Model):
     name = models.CharField(max_length=255)
-    jurisdiction = models.ForeignKey(
-        Jurisdiction, on_delete=models.CASCADE
+    slug = models.SlugField(default=None, null=True)
+
+    description = models.TextField(blank=True)
+
+    jurisdictions = models.ManyToManyField(
+        Jurisdiction,
+        related_name='curriculums'
     )
     publicbody = models.ForeignKey(
         PublicBody, null=True, blank=True,
@@ -48,14 +56,24 @@ class Curriculum(models.Model):
         default='request'
     )
 
+    content_placeholder = PlaceholderField('content')    
+
     subjects = models.ManyToManyField(Subject)
 
     class Meta:
         verbose_name = ('curriculum')
         verbose_name_plural = _('curricula')
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        if self.slug:
+            return reverse('exam-curriculum', kwargs={
+                'curriculum_slug': self.slug
+            })
+        return ''
 
     def get_min_max_year(self):
         min_year = self.start_year.year if self.start_year else MIN_YEAR
@@ -68,6 +86,9 @@ class Curriculum(models.Model):
 
     def needs_request(self):
         return self.legal_status.startswith('request')
+
+    def is_deadend(self):
+        return self.legal_status == 'unrequestable'
 
 
 class ExamRequest(models.Model):

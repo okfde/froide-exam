@@ -11,13 +11,14 @@ from .utils import SubjectYear, MAX_YEAR, YEARS
 
 def index(request):
     curricula = Curriculum.objects.all().prefetch_related(
-        'jurisdiction', 'subjects'
+        'jurisdictions', 'subjects'
     )
-    jurisdictions = set(c.jurisdiction for c in curricula)
+    jurisdictions = set(j for c in curricula for j in c.jurisdictions.all())
     jurisdictions = sorted(jurisdictions, key=lambda x: (x.rank, x.name))
     juris_map = defaultdict(list)
     for c in curricula:
-        juris_map[c.jurisdiction].append(c)
+        for j in c.jurisdictions.all():
+            juris_map[j].append(c)
     for j, c_list in juris_map.items():
         j.curricula = c_list
 
@@ -26,15 +27,10 @@ def index(request):
     })
 
 
-def jurisdiction_view(request, jurisdiction_slug=None):
-    juris = get_object_or_404(Jurisdiction, slug=jurisdiction_slug)
-    curricula = Curriculum.objects.filter(
-        jurisdiction=juris
-    ).prefetch_related('subjects', 'publicbody')
+def curriculum_view(request, curriculum_slug=None):
+    curriculum = get_object_or_404(Curriculum, slug=curriculum_slug)
 
-    subjects = functools.reduce(lambda a, b: a | b, set(
-        c.subjects.all() for c in curricula))
-    subjects = sorted(subjects, key=lambda x: x.name)
+    subjects = curriculum.subjects.all()
 
     display_years = list(reversed(YEARS))
 
@@ -42,7 +38,7 @@ def jurisdiction_view(request, jurisdiction_slug=None):
         s.years = [SubjectYear(subject=s, year=year) for year in display_years]
 
     exam_requests = ExamRequest.objects.filter(
-        curriculum_id__in=curricula
+        curriculum=curriculum
     ).select_related('foirequest')
     exam_request_map = defaultdict(list)
     for er in exam_requests:
@@ -52,20 +48,19 @@ def jurisdiction_view(request, jurisdiction_slug=None):
     default_pb = None
 
     cu_map = defaultdict(list)
-    for c in curricula:
-        if not c.publicbody:
-            if default_pb is None:
-                default_pb = PublicBody.objects.get(
-                    jurisdiction=c.jurisdiction,
-                    classification__name='Ministerium',
-                    categories__name='Bildung'
-                )
-            c.publicbody = default_pb
-        min_year, max_year = c.get_min_max_year()
-        years = list(range(min_year, max_year + 1))
-        for year in years:
-            for s in c.subjects.all():
-                cu_map[(s.id, year)].append(c)
+    if not curriculum.publicbody:
+        if default_pb is None:
+            default_pb = PublicBody.objects.get(
+                jurisdiction=curriculum.jurisdictions.all()[0],
+                classification__name='Ministerium',
+                categories__name='Bildung'
+            )
+        curriculum.publicbody = default_pb
+    min_year, max_year = curriculum.get_min_max_year()
+    years = list(range(min_year, max_year + 1))
+    for year in years:
+        for s in curriculum.subjects.all():
+            cu_map[(s.id, year)].append(curriculum)
 
     for subject in subjects:
         for year in YEARS:
@@ -76,8 +71,8 @@ def jurisdiction_view(request, jurisdiction_slug=None):
             subject_year.exam_requests = exam_request_map[(subject.id, year)]
             subject_year.curricula = cu_map[(subject.id, year)]
 
-    return render(request, 'froide_exam/jurisdiction.html', {
+    return render(request, 'froide_exam/curriculum.html', {
         'years': display_years,
-        'juris': juris,
         'subjects': subjects,
+        'curriculum': curriculum,
     })

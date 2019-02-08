@@ -10,7 +10,7 @@ class SubjectAdmin(admin.ModelAdmin):
 
 
 class CurriculumAdmin(admin.ModelAdmin):
-    list_display = ('jurisdiction', 'start_year', 'end_year', 'kind')
+    list_display = ('name', 'start_year', 'end_year', 'kind', 'legal_status')
     raw_id_fields = ('publicbody',)
 
 

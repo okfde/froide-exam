@@ -4,9 +4,10 @@
 
 
 {% block main %}
-<h2>Jetzt geht's Abi: {{ juris.name }}</h2>
+<h2>{{ juris.name }}</h2>
 
 <a href="{% url 'exam-index' %}" class="btn btn-sm btn-light">zurück</a>
+
 
 <div class="responsive-table">
   <table class="table">
@@ -23,7 +24,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for subject in subjects %}
+
         <tr>
           <th>
             {{ subject.name }}

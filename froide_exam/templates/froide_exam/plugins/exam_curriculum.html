@@ -1,0 +1,27 @@
+<div class="row">
+  {% for curriculum in curriculums %}
+    <div class="col-md-4 ">
+      <div class="card mt-3 {% if curriculum.legal_status == 'unrequestable' %}border-dark{% else %}border-success{% endif %}">
+        <div class="card-body">
+            <h5 class="card-title">
+              <a href="{{ curriculum.get_absolute_url }}">
+                {{ curriculum.name }}
+              </a>
+            </h5>
+            <p class="card-text">
+              {{ curriculum.description }}
+            </p>
+          </div>
+        <div class="card-footer">
+          <small class="text-muted">
+            {% if curriculum.needs_request %}
+              Schon {{ curriculum.request_count }} Anfragen
+            {% else %}
+              Kann nicht angefragt werden
+            {% endif %}
+          </small>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

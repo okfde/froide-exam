@@ -1,0 +1,43 @@
+{% extends "froide_exam/base.html" %}
+{% load cms_tags %}
+{% load static %}
+
+{% block main %}
+<h2>{{ curriculum.name }}</h2>
+
+{% render_placeholder curriculum.content_placeholder %}
+
+{% if not curriculum.is_deadend %}
+{% for subject in subjects %}
+
+  <h3>{{ subject.name }}</h3>
+
+  {% for subject_year in subject.years %}
+    {% if subject_year.exam_requests %}
+      {% for exam_request in subject_year.exam_requests %}
+        {% if exam_request.url %}
+          <a href="{{ exam_request.url }}" class="btn btn-secondary btn-sm mt-2" data-toggle="tooltip" data-placement="top" title="Schon oeffentlich">
+            {{ subject_year.year }}
+          </a>
+        {% else %}
+          <a href="{{ exam_request.foirequest.get_absolute_url }}" class="btn btn-warning btn-sm  mt-2" data-toggle="tooltip" data-placement="top" title="Schon angefragt">
+            {{ subject_year.year }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% if subject_year.can_request %}
+    <a href="{{ subject_year.make_request_url }}" class="btn btn-primary btn-sm mt-2" data-toggle="tooltip" data-placement="top" title="Jetzt anfragen!">
+      {{ subject_year.year }}
+    </a>
+    {% else %}
+    {% if not subject_year.exam_requests %}
+        nicht anfragbar
+    {% endif %}
+    {% endif %}
+  {% endfor %}
+
+
+{% endfor %}
+{% endif %}
+{% endblock %}

@@ -1,11 +1,11 @@
 from django.conf.urls import url
 
 from .views import (
-    index, jurisdiction_view
+    index, curriculum_view
 )
 
 urlpatterns = [
     url(r'^$', index, name='exam-index'),
-    url(r'^(?P<jurisdiction_slug>[\w-]+)/$', jurisdiction_view,
-        name='exam-jurisdiction'),
+    url(r'^(?P<curriculum_slug>[\w-]+)/$', curriculum_view,
+        name='exam-curriculum'),
 ]
