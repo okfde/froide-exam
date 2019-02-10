@@ -16,7 +16,9 @@ class CurriculumAdmin(admin.ModelAdmin):
 
 class ExamRequestAdmin(admin.ModelAdmin):
     date_hierarchy = 'timestamp'
-    list_filter = ('foirequest__status', 'foirequest__resolution',)
+    list_filter = (
+        'foirequest__status', 'foirequest__resolution',
+        'curriculum')
     raw_id_fields = ('foirequest',)
 
 
