@@ -35,7 +35,7 @@ def connect_request_object(sender, **kwargs):
 
     year_date = timezone.make_aware(datetime(year, 1, 1))
 
-    venue, _ = ExamRequest.objects.get_or_create(
+    er, _ = ExamRequest.objects.get_or_create(
         curriculum=curriculum,
         subject=subject,
         start_year=year_date,
@@ -44,3 +44,7 @@ def connect_request_object(sender, **kwargs):
             'foirequest': sender,
         }
     )
+
+    if curriculum.is_oneclick():
+        sender.not_publishable = True
+        sender.save()
