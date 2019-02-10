@@ -16,7 +16,10 @@ class ExamCurriculumPlugin(CMSPluginBase):
     def render(self, context, instance, placeholder):
         context = super().render(context, instance, placeholder)
         curriculums = Curriculum.objects.all().annotate(
-            request_count=models.Count('examrequest')
+            request_count=models.Count(
+                'examrequest',
+                filter=models.Q(examrequest__foirequest__isnull=False)
+            )
         )
         context.update({
             'curriculums': curriculums
