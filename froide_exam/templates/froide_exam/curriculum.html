@@ -20,6 +20,13 @@
   <h3>{{ subject.name }}</h3>
 
   {% for subject_year in subject.years %}
+    {% comment %}<ul>
+      <li>{{ subject_year.year }}</li>
+      <li>{{ subject_year.exam_request.foirequest.id }}</li>
+      <li>{{ subject_year.get_same_request.id }}</li>
+      <li>{{ subject_year.same_requests }}</li>
+      <li>{{ subject_year.request_pending }}</li>
+    </ul>{% endcomment %}
     {% if subject_year.exam_request %}
       {% if subject_year.exam_request.url %}
         <a href="{{ subject_year.exam_request.url }}" class="btn btn-success btn-sm mt-2" data-toggle="tooltip" data-placement="top" title="Schon öffentlich" target="_blank" rel="noopener">
@@ -37,6 +44,19 @@
           {% endif %}
           {{ subject_year.year }}
         </a>
+      {% else %}
+        {% if not subject_year.can_request %}
+          <a href="{{ subject_year.get_same_request.get_absolute_url }}" class="btn btn-primary btn-sm mt-2 {% if subject_year.request_pending %}btn-warning{% elif subject_year.request_failed %}btn-danger{% else %}btn-success{% endif %}" data-toggle="tooltip" data-placement="top" title="{% if subject_year.request_pending %}Schon angefragt{% elif subject_year.request_failed %}Fehlgeschlagen{% else %}Abgeschlossen{% endif %}">
+            {% if subject_year.request_pending %}
+              <span class="fa fa-clock-o"></span>
+            {% elif subject_year.request_failed %}
+              <span class="fa fa-ban"></span>
+            {% else %}
+              <span class="fa fa-check"></span>
+            {% endif %}  
+            {{ subject_year.year }}
+          </a>
+        {% endif %}
       {% endif %}
     {% endif %}
     {% if subject_year.can_request %}

@@ -47,7 +47,7 @@ def curriculum_view(request, curriculum_slug=None):
             er.foirequest_id for er in exam_requests
         }
         same_requests = {
-            fr.same_as_id: fr.id for fr in FoiRequest.objects.filter(
+            fr.same_as_id or fr.id: fr for fr in FoiRequest.objects.filter(
                 user=request.user).filter(
                 Q(same_as_id__in=foirequest_ids) |
                 Q(id__in=foirequest_ids)
@@ -81,7 +81,7 @@ def curriculum_view(request, curriculum_slug=None):
     min_year, max_year = curriculum.get_min_max_year()
     years = list(range(min_year, max_year + 1))
     for year in years:
-        for s in curriculum.subjects.all():
+        for s in subjects:
             cu_map[(s.id, year)].append(curriculum)
 
     for subject in subjects:

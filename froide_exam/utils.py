@@ -44,7 +44,8 @@ class SubjectYear(object):
             return False
         if not self.exam_request.foirequest:
             return
-        return not self.exam_request.foirequest.status_is_final
+        fr = self.get_same_request() or self.exam_request.foirequest
+        return not fr.status_is_final()
 
     @property
     def request_failed(self):
@@ -52,7 +53,8 @@ class SubjectYear(object):
             return False
         if not self.exam_request.foirequest:
             return
-        return 'successful' not in self.exam_request.foirequest.resolution
+        fr = self.get_same_request() or self.exam_request.foirequest
+        return 'successful' not in fr.resolution
 
     def can_request(self):
         if not self.curricula:
@@ -71,10 +73,13 @@ class SubjectYear(object):
         return True
 
     def has_requested(self):
-        return self.user.id in {
-            er.foirequest.user_id for er in self.exam_requests
-            if er.foirequest
-        }
+        return self.get_same_request() is not None
+
+    def get_same_request(self):
+        if not self.exam_request:
+            return
+        if self.exam_request.foirequest_id in self.same_requests:
+            return self.same_requests[self.exam_request.foirequest_id]
 
     def is_one_click(self):
         if not self.curricula:
