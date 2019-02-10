@@ -1,7 +1,9 @@
 from collections import defaultdict
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 
+from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
 
 from .models import Curriculum, ExamRequest
@@ -34,13 +36,33 @@ def curriculum_view(request, curriculum_slug=None):
 
     display_years = list(reversed(YEARS))
 
-    for s in subjects:
-        s.years = [SubjectYear(subject=s, year=year) for year in display_years]
-
     exam_requests = ExamRequest.objects.filter(
         curriculum=curriculum
     ).select_related('foirequest')
     exam_request_map = defaultdict(list)
+
+    same_requests = {}
+    if curriculum.is_oneclick() and request.user.is_authenticated:
+        foirequest_ids = {
+            er.foirequest_id for er in exam_requests
+        }
+        same_requests = {
+            fr.same_as_id: fr.id for fr in FoiRequest.objects.filter(
+                user=request.user).filter(
+                Q(same_as_id__in=foirequest_ids) |
+                Q(id__in=foirequest_ids)
+            )
+        }
+
+    for s in subjects:
+        s.years = [
+            SubjectYear(
+                user=request.user, subject=s, year=year,
+                same_requests=same_requests
+            )
+            for year in display_years
+        ]
+
     for er in exam_requests:
         for year in er.get_years():
             exam_request_map[(er.subject_id, year)].append(er)

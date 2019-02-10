@@ -15,9 +15,11 @@ REFERENCE_NAMESPACE = 'exam:'
 
 class SubjectYear(object):
 
-    def __init__(self, subject=None, year=None):
+    def __init__(self, user=None, subject=None, year=None, same_requests=None):
         self.subject = subject
         self.year = year
+        self.user = user
+        self.same_requests = same_requests
 
     def __str__(self):
         return '{}: {}'.format(self.subject, self.year)
@@ -30,6 +32,28 @@ class SubjectYear(object):
             year=self.year
         )
 
+    @property
+    def exam_request(self):
+        if self.exam_requests:
+            return self.exam_requests[0]
+        return None
+
+    @property
+    def request_pending(self):
+        if not self.exam_request:
+            return False
+        if not self.exam_request.foirequest:
+            return
+        return not self.exam_request.foirequest.status_is_final
+
+    @property
+    def request_failed(self):
+        if not self.exam_request:
+            return False
+        if not self.exam_request.foirequest:
+            return
+        return 'successful' not in self.exam_request.foirequest.resolution
+
     def can_request(self):
         if not self.curricula:
             return
@@ -40,7 +64,27 @@ class SubjectYear(object):
             return True
         if curriculum.legal_status == 'request':
             return False
+        if not self.user.is_authenticated:
+            return True
+        if self.has_requested():
+            return False
         return True
+
+    def has_requested(self):
+        return self.user.id in {
+            er.foirequest.user_id for er in self.exam_requests
+            if er.foirequest
+        }
+
+    def is_one_click(self):
+        if not self.curricula:
+            return
+        curriculum = self.curricula[0]
+        if not curriculum.legal_status == 'request_not_publish':
+            return
+        if not self.exam_requests:
+            return
+        return self.exam_requests[0].foirequest
 
     def make_request_url(self):
         if not self.curricula:

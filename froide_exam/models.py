@@ -90,6 +90,9 @@ class Curriculum(models.Model):
     def is_deadend(self):
         return self.legal_status == 'unrequestable'
 
+    def is_oneclick(self):
+        return self.legal_status == 'request_not_publish'
+
 
 class ExamRequest(models.Model):
     subject = models.ForeignKey(
