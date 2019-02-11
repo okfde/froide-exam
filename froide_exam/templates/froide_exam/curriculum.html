@@ -70,8 +70,10 @@
         </a>
       {% endif %}
     {% else %}
-      {% if not subject_year.exam_requests %}
-        <span class="btn btn-dark btn-sm">nicht anfragbar</span>
+      {% if not subject_year.exam_request %}
+        <span class="btn btn-dark btn-sm mt-2" data-toggle="tooltip" data-placement="top" title="Wird angefragt...">
+          {{ subject_year.year }}
+        </span>
       {% endif %}
     {% endif %}
   {% endfor %}

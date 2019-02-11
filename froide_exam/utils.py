@@ -35,7 +35,11 @@ class SubjectYear(object):
     @property
     def exam_request(self):
         if self.exam_requests:
-            return self.exam_requests[0]
+            er = self.exam_requests[0]
+            if (not er.foirequest or
+                    er.foirequest.status == 'awaiting_user_confirmation'):
+                return None
+            return er
         return None
 
     @property
