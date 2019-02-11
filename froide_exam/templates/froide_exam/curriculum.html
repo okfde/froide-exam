@@ -70,7 +70,7 @@
         </a>
       {% endif %}
     {% else %}
-      {% if not subject_year.exam_request %}
+      {% if subject_year.request_awaiting_user %}
         <span class="btn btn-dark btn-sm mt-2" data-toggle="tooltip" data-placement="top" title="Wird angefragt...">
           {{ subject_year.year }}
         </span>

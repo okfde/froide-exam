@@ -36,11 +36,27 @@ class SubjectYear(object):
     def exam_request(self):
         if self.exam_requests:
             er = self.exam_requests[0]
-            if (not er.foirequest or
-                    er.foirequest.status == 'awaiting_user_confirmation'):
-                return None
             return er
         return None
+
+    @property
+    def exam_foirequest(self):
+        if not self.exam_requests:
+            return None
+        er = self.exam_requests[0]
+        if (not er.foirequest or
+                er.foirequest.status == 'awaiting_user_confirmation'):
+            return None
+        return er
+
+    @property
+    def request_awaiting_user(self):
+        if not self.exam_request:
+            return False
+        if not self.exam_request.foirequest:
+            return False
+        er = self.exam_request
+        return er.foirequest.status == 'awaiting_user_confirmation'
 
     @property
     def request_pending(self):
@@ -66,7 +82,9 @@ class SubjectYear(object):
         curriculum = self.curricula[0]
         if not curriculum.needs_request():
             return False
-        if not self.exam_requests:
+        if self.exam_request and self.exam_request.url:
+            return False
+        if not self.exam_foirequest:
             return True
         if curriculum.legal_status == 'request':
             return False
