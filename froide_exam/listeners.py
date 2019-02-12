@@ -33,6 +33,11 @@ def connect_request_object(sender, **kwargs):
     except ValueError:
         return
 
+    sender.user.tags.add('exam')
+    if not sender.user.is_active:
+        # First-time requester
+        sender.user.tags.add('exam-first')
+
     year_date = timezone.make_aware(datetime(year, 1, 1))
 
     er, _ = ExamRequest.objects.get_or_create(
