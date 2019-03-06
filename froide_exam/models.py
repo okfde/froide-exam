@@ -56,7 +56,7 @@ class Curriculum(models.Model):
         default='request'
     )
 
-    content_placeholder = PlaceholderField('content')    
+    content_placeholder = PlaceholderField('content')
 
     subjects = models.ManyToManyField(Subject)
 
