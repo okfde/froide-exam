@@ -1,16 +1,13 @@
 from datetime import datetime
 from django.utils import timezone
 
+from froide.foirequest.models import FoiAttachment
+
 from .models import ExamRequest, Subject, Curriculum
 from .utils import REFERENCE_NAMESPACE
 
 
-def connect_request_object(sender, **kwargs):
-    reference = kwargs.get('reference')
-    if not reference:
-        return
-    if not reference.startswith(REFERENCE_NAMESPACE):
-        return
+def from_reference(reference):
     try:
         namespace, curriculum_id, subject_id, year = reference.split(':', 3)
     except ValueError:
@@ -23,7 +20,7 @@ def connect_request_object(sender, **kwargs):
 
     try:
         curriculum = Curriculum.objects.get(pk=curriculum_id)
-    except Subject.DoesNotExist:
+    except Curriculum.DoesNotExist:
         return
 
     try:
@@ -32,6 +29,21 @@ def connect_request_object(sender, **kwargs):
             return
     except ValueError:
         return
+
+    return curriculum, subject, year
+
+
+def connect_request_object(sender, **kwargs):
+    reference = kwargs.get('reference')
+    if not reference:
+        return
+    if not reference.startswith(REFERENCE_NAMESPACE):
+        return
+
+    result = from_reference(reference)
+    if result is None:
+        return
+    curriculum, subject, year = result
 
     sender.user.tags.add('exam')
     if not sender.user.is_active:
@@ -53,3 +65,22 @@ def connect_request_object(sender, **kwargs):
     if curriculum.is_oneclick():
         sender.not_publishable = True
         sender.save()
+
+
+def hide_attachments(sender=None, message=None, **kwargs):
+    if not sender.reference.startswith(REFERENCE_NAMESPACE):
+        return
+
+    result = from_reference(sender.reference)
+    if result is None:
+        return
+    curriculum, subject, year = result
+
+    if not curriculum.is_oneclick():
+        return
+
+    FoiAttachment.objects.filter(
+        belongs_to=message, filetype__contains='pdf'
+    ).update(
+        can_approve=False
+    )
