@@ -18,6 +18,11 @@ LEGAL_STATUS_CHOICES = (
     ('unrequestable', _('Nicht anfragbar')),
 )
 
+KIND_CHOICES = (
+    ('abitur', _('Abitur')),
+    ('realschulabschluss', _('Realschulabschluss')),
+    ('hauptschulabschluss', _('Hauptschulabschluss')),
+)
 
 class Subject(models.Model):
     name = models.CharField(max_length=255)
@@ -47,9 +52,7 @@ class Curriculum(models.Model):
     )
     start_year = models.DateField(null=True, blank=True)
     end_year = models.DateField(null=True, blank=True)
-    kind = models.CharField(max_length=100, choices=(
-        ('abitur', _('Abitur')),
-    ))
+    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
     legal_status = models.CharField(
         max_length=100,
         choices=LEGAL_STATUS_CHOICES,
@@ -66,7 +69,7 @@ class Curriculum(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
+        return '{name} ({kind})'.format(name=self.name, kind=self.kind)
 
     def get_absolute_url(self):
         if self.slug:
