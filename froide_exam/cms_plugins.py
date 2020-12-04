@@ -1,10 +1,12 @@
+from collections import defaultdict
+
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
-from .models import Curriculum
+from .models import Curriculum, KIND_CHOICES
 
 
 @plugin_pool.register_plugin
@@ -21,7 +23,18 @@ class ExamCurriculumPlugin(CMSPluginBase):
                 filter=models.Q(examrequest__foirequest__isnull=False)
             )
         )
+
+        states = defaultdict(lambda: [])
+        for curriculum in curriculums:
+            jurisdictions = curriculum.jurisdictions.all()
+            s = tuple(sorted(map(lambda juris: juris.slug, jurisdictions)))
+            curriculum.kindText = list(filter(lambda kind: kind[0] == curriculum.kind, KIND_CHOICES))[0][1]
+            states[s].append(curriculum)
+
+        print(states)
+
         context.update({
-            'curriculums': curriculums
+            'curriculums': curriculums,
+            'states': states.values()
         })
         return context

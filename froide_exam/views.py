@@ -6,7 +6,7 @@ from django.db.models import Q
 from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
 
-from .models import Curriculum, ExamRequest
+from .models import Curriculum, ExamRequest, KIND_CHOICES
 from .utils import SubjectYear, MAX_YEAR, YEARS
 
 
