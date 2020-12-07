@@ -31,8 +31,6 @@ class ExamCurriculumPlugin(CMSPluginBase):
             curriculum.kindText = list(filter(lambda kind: kind[0] == curriculum.kind, KIND_CHOICES))[0][1]
             states[s].append(curriculum)
 
-        print(states)
-
         context.update({
             'curriculums': curriculums,
             'states': states.values()
