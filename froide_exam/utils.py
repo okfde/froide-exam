@@ -80,13 +80,13 @@ class SubjectYear(object):
         if not self.curricula:
             return
         curriculum = self.curricula[0]
-        if not curriculum.needs_request():
+        if not self.state and not self.state.needs_request():
             return False
         if self.exam_request and self.exam_request.url:
             return False
         if not self.exam_foirequest:
             return True
-        if curriculum.legal_status == 'request':
+        if self.state and self.state.legal_status == 'request':
             return False
         if not self.user.is_authenticated:
             return True
@@ -107,7 +107,7 @@ class SubjectYear(object):
         if not self.curricula:
             return
         curriculum = self.curricula[0]
-        if not curriculum.legal_status == 'request_not_publish':
+        if not self.state.legal_status == 'request_not_publish':
             return
         if not self.exam_requests:
             return
@@ -120,7 +120,7 @@ class SubjectYear(object):
             return self._request_url
         curriculum = self.curricula[0]
 
-        pb_slug = curriculum.publicbody.slug
+        pb_slug = self.state.publicbody.slug
         url = reverse('foirequest-make_request', kwargs={
             'publicbody_slug': pb_slug
         })

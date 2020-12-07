@@ -48,7 +48,7 @@
                   {% endfor %}
                 </ul>
               {% endif %}
-              {% if subject_year.can_request %}
+              {% if state.can_request %}
                 <a href="{{ subject_year.make_request_url }}" class="btn btn-primary btn-sm">
                   Anfragen!
                 </a>

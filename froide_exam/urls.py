@@ -6,6 +6,6 @@ from .views import (
 
 urlpatterns = [
     url(r'^$', index, name='exam-index'),
-    url(r'^(?P<curriculum_slug>[\w-]+)/$', curriculum_view,
+    url(r'^(?P<state_slug>[\w-]+)/$', curriculum_view,
         name='exam-curriculum'),
 ]

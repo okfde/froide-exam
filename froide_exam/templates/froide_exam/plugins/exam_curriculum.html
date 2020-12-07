@@ -1,24 +1,23 @@
+{% load cms_tags %}
+
 <div class="row">
-  {% for curriculum in states %}
-  <div class="col-md-4">
+  {% for state in states %}
+  <div class="col-md-6">
     <div class="card mt-3">
       <div class="card-body">
         <h5 class="card-title">
-          {{ curriculum.0.name }}
+          <a href="{{ state.get_absolute_url }}">{{ state.name }}</a>
         </h5>
-        <p class="card-text">
-          {{ curriculum.0.description }}
-        </p>
-        <div class="d-flex">
-          {% for c in curriculum %}
-          {% if c.needs_request %}
-          <a href="{{ c.get_absolute_url }}" class="badge badge-pill badge-primary mr-2" data-toggle="tooltip"
-            data-placement="top" title="Schon {{ c.request_count }} Anfragen">{{ c.kindText }}</a>
+        <div>
+          {% if state.is_deadend %}
+          <small class="text-secondary">Kann nicht angefragt werden.</small>
           {% else %}
-          <a href="{{ c.get_absolute_url }}" class="badge badge-pill badge-light mr-2" data-toggle="tooltip"
-            data-placement="top" title="Kann nicht angefragt werden">{{ c.kindText }}</a>
-          {% endif %}
+          {% for curriculum in state.curricula %}
+          <a href="{{ state.get_absolute_url }}?kind={{ curriculum.kind }}" class="badge badge-pill badge-light mr-2"
+            data-toggle="tooltip" data-placement="top"
+            title="Schon {{ curriculum.request_count }} Anfragen">{{ curriculum.kindText }}</a>
           {% endfor %}
+          {% endif %}
         </div>
       </div>
     </div>

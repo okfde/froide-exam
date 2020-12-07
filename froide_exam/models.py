@@ -35,12 +35,9 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
 
-
-class Curriculum(models.Model):
+class State(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(default=None, null=True)
-
-    description = models.TextField(blank=True)
+    slug = models.SlugField()
 
     jurisdictions = models.ManyToManyField(
         Jurisdiction,
@@ -50,16 +47,56 @@ class Curriculum(models.Model):
         PublicBody, null=True, blank=True,
         on_delete=models.SET_NULL
     )
-    start_year = models.DateField(null=True, blank=True)
-    end_year = models.DateField(null=True, blank=True)
-    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
+
+    content_placeholder = PlaceholderField('content')
+
     legal_status = models.CharField(
         max_length=100,
         choices=LEGAL_STATUS_CHOICES,
         default='request'
     )
 
-    content_placeholder = PlaceholderField('content')
+    class Meta:
+        verbose_name = ('state')
+        verbose_name_plural = _('states')
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+    def needs_request(self):
+        return self.legal_status.startswith('request')
+
+    def is_deadend(self):
+        return self.legal_status == 'unrequestable'
+
+    def is_oneclick(self):
+        return self.legal_status == 'request_not_publish'
+
+    def get_absolute_url(self):
+        if self.slug:
+            return reverse('exam-curriculum', kwargs={
+                'state_slug': self.slug
+            })
+        return ''
+    
+
+class Curriculum(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(default=None, null=True)
+
+    description = models.TextField(blank=True)
+
+    state = models.ForeignKey(
+        State,
+        null=True,
+        related_name='state',
+        on_delete=models.SET_NULL
+    )
+    
+    start_year = models.DateField(null=True, blank=True)
+    end_year = models.DateField(null=True, blank=True)
+    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
 
     subjects = models.ManyToManyField(Subject)
 
@@ -71,13 +108,6 @@ class Curriculum(models.Model):
     def __str__(self):
         return '{name} ({kind})'.format(name=self.name, kind=self.kind)
 
-    def get_absolute_url(self):
-        if self.slug:
-            return reverse('exam-curriculum', kwargs={
-                'curriculum_slug': self.slug
-            })
-        return ''
-
     def get_min_max_year(self):
         min_year = self.start_year.year if self.start_year else MIN_YEAR
         max_year = self.end_year.year if self.end_year else MAX_YEAR
@@ -86,15 +116,6 @@ class Curriculum(models.Model):
     def is_valid_year(self, year):
         min_year, max_year = self.get_min_max_year()
         return min_year <= year <= max_year
-
-    def needs_request(self):
-        return self.legal_status.startswith('request')
-
-    def is_deadend(self):
-        return self.legal_status == 'unrequestable'
-
-    def is_oneclick(self):
-        return self.legal_status == 'request_not_publish'
 
 
 class ExamRequest(models.Model):
