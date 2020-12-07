@@ -1,0 +1,40 @@
+$normal: #007bff;
+$pending: #ffc107;
+$successful: #28a745;
+$refused: #dc3545;
+
+.curriculum-badge {
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.curriculum-badge {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  -moz-border-radius: 100%;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  margin-right: 0.2rem;
+}
+
+.curriculum-badge-normal:before {
+  @extend .curriculum-badge;
+  background-color: $normal;
+}
+
+.curriculum-badge-pending:before {
+  @extend .curriculum-badge;
+  background-color: $pending;
+}
+
+.curriculum-badge-successful:before {
+  @extend .curriculum-badge;
+  background-color: $successful;
+}
+
+.curriculum-badge-refused:before {
+  @extend .curriculum-badge;
+  background-color: $refused;
+}

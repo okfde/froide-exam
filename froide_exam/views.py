@@ -93,6 +93,8 @@ def curriculum_view(request, curriculum_slug=None):
             subject_year.exam_requests = exam_request_map[(subject.id, year)]
             subject_year.curricula = cu_map[(subject.id, year)]
 
+    curriculum.kindText = list(filter(lambda kind: kind[0] == curriculum.kind, KIND_CHOICES))[0][1]
+
     return render(request, 'froide_exam/curriculum.html', {
         'years': display_years,
         'subjects': subjects,

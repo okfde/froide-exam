@@ -1,31 +1,25 @@
 <div class="row">
   {% for curriculum in states %}
-  <div class="col-md-4 ">
-    <div
-      class="card mt-3 {% if curriculum.0.legal_status == 'unrequestable' %}border-dark{% else %}border-success{% endif %}">
+  <div class="col-md-4">
+    <div class="card mt-3">
       <div class="card-body">
         <h5 class="card-title">
-          <a href="{{ curriculum.0.get_absolute_url }}">
-            {{ curriculum.0.name }}
-          </a>
+          {{ curriculum.0.name }}
         </h5>
         <p class="card-text">
           {{ curriculum.0.description }}
         </p>
-      </div>
-      <div class="card-footer">
-        {% for c in curriculum %}
-        <div>
-          <a href="{{ c.get_absolute_url }}">{{ c.kindText }}</a>
-          <small class="text-muted">
-            {% if c.needs_request %}
-            Schon {{ c.request_count }} Anfragen
-            {% else %}
-            Kann nicht angefragt werden
-            {% endif %}
-          </small>
+        <div class="d-flex">
+          {% for c in curriculum %}
+          {% if c.needs_request %}
+          <a href="{{ c.get_absolute_url }}" class="badge badge-pill badge-primary mr-2" data-toggle="tooltip"
+            data-placement="top" title="Schon {{ c.request_count }} Anfragen">{{ c.kindText }}</a>
+          {% else %}
+          <a href="{{ c.get_absolute_url }}" class="badge badge-pill badge-light mr-2" data-toggle="tooltip"
+            data-placement="top" title="Kann nicht angefragt werden">{{ c.kindText }}</a>
+          {% endif %}
+          {% endfor %}
         </div>
-        {% endfor %}
       </div>
     </div>
   </div>
