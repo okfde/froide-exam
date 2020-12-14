@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('slug', models.SlugField()),
                 ('legal_status', models.CharField(choices=[('request', 'Anfragbar'), ('request_not_publish', 'Anfragbar (nicht veröffentlichbar)'), ('public', 'Schon öffentlich'), ('unrequestable', 'Nicht anfragbar')], default='request', max_length=100)),
-                ('content_placeholder', cms.models.fields.PlaceholderField(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, slotname='content', to='cms.Placeholder')),
+                ('description', models.TextField(blank=True)),
                 ('jurisdictions', models.ManyToManyField(related_name='curriculums', to='publicbody.Jurisdiction')),
                 ('publicbody', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='publicbody.PublicBody')),
             ],

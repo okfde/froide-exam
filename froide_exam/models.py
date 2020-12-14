@@ -48,7 +48,7 @@ class State(models.Model):
         on_delete=models.SET_NULL
     )
 
-    content_placeholder = PlaceholderField('content')
+    description = models.TextField(blank=True)
 
     legal_status = models.CharField(
         max_length=100,
