@@ -48,16 +48,6 @@ def curriculum_view(request, state_slug=None):
 
     subjects_done = []
 
-    default_pb = None
-    if not state.publicbody:
-        if default_pb is None:
-            default_pb = PublicBody.objects.get(
-                jurisdiction=state.jurisdictions.all()[0],
-                classification__name='Ministerium',
-                categories__name='Bildung'
-            )
-        state.publicbody = default_pb
-
     for curriculum in curricula:
         subjects = curriculum.subjects.all()
 
