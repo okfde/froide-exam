@@ -96,7 +96,7 @@ def state_view(request, state_slug=None):
     for kind in KIND_CHOICES:
         kinds.append({ 'value': kind[0], 'text': kind[1] })
 
-    return render(request, 'froide_exam/curriculum.html', {
+    return render(request, 'froide_exam/state.html', {
         'years': display_years,
         'subjects': subjects_done,
         'state': state,
