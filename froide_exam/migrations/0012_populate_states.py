@@ -19,7 +19,7 @@ def create_states(apps, schema_editor):
         curriculum.save()
 class Migration(migrations.Migration):
     dependencies = [
-      ('froide_exam', '0011_auto_20201218_1323'),
+      ('froide_exam', '0011_state_model'),
     ]
 
     operations = [

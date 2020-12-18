@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('publicbody', '0031_publicbody_change_history'),
-        ('froide_exam', '0010_auto_20201218_1316'),
+        ('froide_exam', '0010_add_curriculum_kinds'),
     ]
 
     operations = [
