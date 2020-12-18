@@ -17,12 +17,14 @@ def index(request):
 def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
     
+    # check if ?kind=... is ok
     KIND_IDS = list(map(lambda c: c[0], KIND_CHOICES))
     requested_kind = request.GET.get('kind')
     requested_kind = requested_kind if requested_kind in KIND_IDS else False
     
     curricula = []
 
+    # TODO: better way to this?
     if requested_kind:
         curricula = Curriculum.objects.filter(state=state, kind=requested_kind)
     else:
@@ -89,6 +91,7 @@ def state_view(request, state_slug=None):
 
         curriculum.kindText = list(filter(lambda kind: kind[0] == curriculum.kind, KIND_CHOICES))[0][1]
 
+    # convert the tuples into a dict-array
     kinds = []
     for kind in KIND_CHOICES:
         kinds.append({ 'value': kind[0], 'text': kind[1] })
