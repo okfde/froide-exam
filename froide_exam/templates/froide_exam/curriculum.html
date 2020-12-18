@@ -14,7 +14,7 @@
 {% block main %}
 <h2>{{ state.name }}</h2>
 
-{% state.description | markdown %}
+{{ state.description | markdown }}
 
 {% if not state.is_deadend %}
 
