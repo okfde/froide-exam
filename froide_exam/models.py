@@ -72,7 +72,7 @@ class State(models.Model):
 
     def get_absolute_url(self):
         if self.slug:
-            return reverse('exam-curriculum', kwargs={
+            return reverse('exam-state', kwargs={
                 'state_slug': self.slug
             })
         return ''
