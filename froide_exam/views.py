@@ -13,24 +13,8 @@ from .utils import SubjectYear, MAX_YEAR, YEARS
 
 def index(request):
     return redirect('/kampagnen/frag-sie-abi/')
-    # curricula = Curriculum.objects.all().prefetch_related(
-    #     'jurisdictions', 'subjects'
-    # )
-    # jurisdictions = set(j for c in curricula for j in c.jurisdictions.all())
-    # jurisdictions = sorted(jurisdictions, key=lambda x: (x.rank, x.name))
-    # juris_map = defaultdict(list)
-    # for c in curricula:
-    #     for j in c.jurisdictions.all():
-    #         juris_map[j].append(c)
-    # for j, c_list in juris_map.items():
-    #     j.curricula = c_list
 
-    # return render(request, 'froide_exam/index.html', {
-    #     'jurisdictions': jurisdictions
-    # })
-
-
-def curriculum_view(request, state_slug=None):
+def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
     
     KIND_IDS = list(map(lambda c: c[0], KIND_CHOICES))
