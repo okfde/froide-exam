@@ -27,8 +27,9 @@
         <form method="GET" id="kindform">
           <select name="kind" class="font-weight-bold">
             <option value="all">Alle Abschlüsse...</option>
-            {% for kind in kinds %}
-            <option value="{{ kind.value }}" {% if kind.value == requested_kind %}selected{% endif %}>{{ kind.text }}
+            {% for key, kind in kinds.items %}
+            <option value="{{ key }}" {% if kind.value == requested_kind %}selected{% endif %}>
+              {{ kind }}
             </option>
             {% endfor %}
           </select>

@@ -7,20 +7,20 @@ from django.http import Http404
 from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
 
-from .models import State, Curriculum, ExamRequest, KIND_CHOICES
+from .models import State, Curriculum, ExamRequest, KINDS
 from .utils import SubjectYear, MAX_YEAR, YEARS
 
 
 def index(request):
-    return redirect('/kampagnen/frag-sie-abi/')
+    return redirect('/kampagnen/verschlussache-pruefung/')
 
 def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
     
     # check if ?kind=... is ok
-    KIND_IDS = list(map(lambda c: c[0], KIND_CHOICES))
+    kind_ids = KINDS.keys()
     requested_kind = request.GET.get('kind')
-    requested_kind = requested_kind if requested_kind in KIND_IDS else False
+    requested_kind = requested_kind if requested_kind in kind_ids else False
     
     curricula = []
 
@@ -89,17 +89,12 @@ def state_view(request, state_slug=None):
             subject.curriculum = curriculum
             subjects_done.append(subject)
 
-        curriculum.kindText = list(filter(lambda kind: kind[0] == curriculum.kind, KIND_CHOICES))[0][1]
-
-    # convert the tuples into a dict-array
-    kinds = []
-    for kind in KIND_CHOICES:
-        kinds.append({ 'value': kind[0], 'text': kind[1] })
+        curriculum.kindText = KINDS[curriculum.kind]
 
     return render(request, 'froide_exam/state.html', {
         'years': display_years,
         'subjects': subjects_done,
         'state': state,
-        'kinds': kinds,
+        'kinds': KINDS,
         'requested_kind': requested_kind
     })

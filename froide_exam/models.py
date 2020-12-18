@@ -24,6 +24,7 @@ KIND_CHOICES = (
     ('hauptschulabschluss', _('Hauptschulabschluss')),
 )
 
+for kind in KIND_CHOICES:
 class Subject(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
