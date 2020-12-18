@@ -38,15 +38,8 @@ class Subject(models.Model):
 class State(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
-
-    jurisdictions = models.ManyToManyField(
-        Jurisdiction,
-        related_name='curriculums'
-    )
-    publicbody = models.ForeignKey(
-        PublicBody, null=True, blank=True,
-        on_delete=models.SET_NULL
-    )
+    
+    publicbody = models.ForeignKey(PublicBody, on_delete=models.CASCADE)
 
     description = models.TextField(blank=True)
 
@@ -90,10 +83,9 @@ class Curriculum(models.Model):
     state = models.ForeignKey(
         State,
         null=True,
-        related_name='state',
         on_delete=models.SET_NULL
     )
-    
+
     start_year = models.DateField(null=True, blank=True)
     end_year = models.DateField(null=True, blank=True)
     kind = models.CharField(max_length=100, choices=KIND_CHOICES)
