@@ -29,8 +29,8 @@ $refused: #dc3545;
   background-color: $pending;
 }
 
-.curriculum-badge-successful:before {
-  @extend .curriculum-badge;
+.badge.curriculum-badge-successful, .badge.curriculum-badge-successful:hover {
+  color: #fff;
   background-color: $successful;
 }
 
