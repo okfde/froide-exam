@@ -130,7 +130,7 @@ class SubjectYear(object):
                     kind=kind,
                     subject=self.subject,
                     year=self.year,
-                    name=curriculum.name,
+                    name=curriculum.state.name,
                     ))
         if len(subject) > 250:
             subject = subject[:250] + '...'
@@ -141,7 +141,7 @@ class SubjectYear(object):
                 subject=self.subject,
                 year=self.year,
                 kind=kind,
-                name=curriculum.name
+                name=curriculum.state.name
         )
         ref = self.get_reference(curriculum)
         query = {
