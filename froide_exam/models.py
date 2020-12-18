@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from cms.models.fields import PlaceholderField
 
-from froide.publicbody.models import PublicBody, Jurisdiction
+from froide.publicbody.models import PublicBody
 from froide.foirequest.models import FoiRequest
 
 from .utils import MIN_YEAR, MAX_YEAR
