@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from cms.models.fields import PlaceholderField
 
-from froide.publicbody.models import PublicBody
+from froide.publicbody.models import PublicBody, Jurisdiction
 from froide.foirequest.models import FoiRequest
 
 from .utils import MIN_YEAR, MAX_YEAR
@@ -27,7 +27,7 @@ KIND_CHOICES = (
 KINDS = {}
 for kind in KIND_CHOICES:
     KINDS[kind[0]] = kind[1]
-    
+
 class Subject(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -79,11 +79,8 @@ class State(models.Model):
     
 
 class Curriculum(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(default=None, null=True)
-
-    description = models.TextField(blank=True)
-
+    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
+    
     state = models.ForeignKey(
         State,
         null=True,
@@ -92,7 +89,6 @@ class Curriculum(models.Model):
 
     start_year = models.DateField(null=True, blank=True)
     end_year = models.DateField(null=True, blank=True)
-    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
 
     subjects = models.ManyToManyField(Subject)
 
@@ -112,6 +108,26 @@ class Curriculum(models.Model):
     def is_valid_year(self, year):
         min_year, max_year = self.get_min_max_year()
         return min_year <= year <= max_year
+
+    # legacy fields: technically no longer required
+
+    jurisdictions = models.ManyToManyField(
+        Jurisdiction,
+        related_name='curriculums'
+    )
+    publicbody = models.ForeignKey(
+        PublicBody, null=True, blank=True,
+        on_delete=models.SET_NULL
+    )
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(default=None, null=True)
+    content_placeholder = PlaceholderField('content')
+    description = models.TextField(blank=True)
+    legal_status = models.CharField(
+        max_length=100,
+        choices=LEGAL_STATUS_CHOICES,
+        default='request'
+    )
 
 
 class ExamRequest(models.Model):
