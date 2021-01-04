@@ -72,11 +72,9 @@ class State(models.Model):
 
     def get_absolute_url(self):
         if self.slug:
-            return reverse('exam-state', kwargs={
-                'state_slug': self.slug
-            })
+            return('app/{}'.format(self.slug))
         return ''
-    
+
 
 class Curriculum(models.Model):
     kind = models.CharField(max_length=100, choices=KIND_CHOICES)
