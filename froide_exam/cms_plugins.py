@@ -31,6 +31,10 @@ class ExamCurriculumPlugin(CMSPluginBase):
             state.curricula = []
 
             for curriculum in curricula:
+                # TODO: remove before launch!
+                if curriculum.kind != 'abitur':
+                    continue
+
                 curriculum.kindText = list(filter(lambda kind: kind[0] == curriculum.kind, KIND_CHOICES))[0][1]
                 state.curricula.append(curriculum)
 

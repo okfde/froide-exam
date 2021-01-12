@@ -23,6 +23,8 @@
     <tr>
       <th>Fach</th>
       <th>Jahrgänge</th>
+
+      {% comment "TODO: remove before launch!" --> %}
       <th>
         <form method="GET" id="kindform">
           <select name="kind" class="font-weight-bold">
@@ -35,6 +37,7 @@
           </select>
         </form>
       </th>
+      {% endcomment %}
     </tr>
   </thead>
   <tbody>
@@ -105,7 +108,9 @@
         {% endif %}
         {% endfor %}
       </td>
+      {% comment "TODO: remove before launch!" --> %}
       <td>{{ subject.curriculum.kindText }}</td>
+      {% endcomment %}
     </tr>
     {% endfor %}
   </tbody>

@@ -2,7 +2,6 @@ from collections import defaultdict
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
-from django.http import Http404
 
 from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
@@ -21,6 +20,10 @@ def state_view(request, state_slug=None):
     kind_ids = KINDS.keys()
     requested_kind = request.GET.get('kind')
     requested_kind = requested_kind if requested_kind in kind_ids else False
+    
+    # TODO: remove on launch!
+    # this emulates the old FragSieAbi site and only allows Abitur requests
+    requested_kind = 'abitur'
     
     curricula = []
 
@@ -91,10 +94,16 @@ def state_view(request, state_slug=None):
 
         curriculum.kindText = KINDS[curriculum.kind]
 
+    # TODO: remove before launch!
+    # this emulates the old FragSieAbi site and only allows Abitur requests
+    OVERWRITE_KINDS = {
+        'abitur': 'Abitur'
+    }
+
     return render(request, 'froide_exam/state.html', {
         'years': display_years,
         'subjects': subjects_done,
         'state': state,
-        'kinds': KINDS,
+        'kinds': OVERWRITE_KINDS, # TODO: remove before launch!
         'requested_kind': requested_kind
     })
