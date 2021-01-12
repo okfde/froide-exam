@@ -10,7 +10,12 @@
         </h5>
         <div>
           {% if state.is_deadend %}
-          <small class="text-secondary">Kann nicht angefragt werden.</small>
+          <small class="text-secondary">
+            Kann nicht angefragt werden.
+            <a href="./faq/#ablehnungen" data-toggle="tooltip" data-placement="top" title="Mehr Informationen">
+              <i class="fa fa-question"></i>
+            </a>
+          </small>
           {% else %}
           {% for curriculum in state.curricula %}
           <a href="{{ state.get_absolute_url }}?kind={{ curriculum.kind }}" class="badge badge-pill badge-light mr-2"
