@@ -85,8 +85,9 @@
             {% endif %}
           {% endif %}
         
+        {% endif %}
 
-        {% elif subject_year.can_request %}
+        {% if subject_year.can_request %}
           {% if subject_year.is_one_click %}
           <a href="{{ subject_year.exam_request.foirequest.get_absolute_url }}#make-same-request"
             class="badge badge-pill badge-light curriculum-badge-normal mt-2 border-dark" data-toggle="tooltip"

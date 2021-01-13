@@ -35,7 +35,23 @@ class SubjectYear(object):
     @property
     def exam_request(self):
         if self.exam_requests:
+            # if there's just one, take that one
             er = self.exam_requests[0]
+
+            # if there are multiple ones to choose from,
+            # prefer one with a url
+            # or a successful one
+            if len(self.exam_requests) > 1:
+                for request in self.exam_requests:
+                    if request.foirequest and request.foirequest.resolution == 'successful':
+                        er = request
+                        break
+
+                for request in self.exam_requests:
+                    if request.url:
+                        er = request
+                        break
+            
             return er
         return None
 
