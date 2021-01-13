@@ -96,7 +96,16 @@ class Curriculum(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return '{name} ({kind})'.format(name=self.name, kind=self.kind)
+        name = ''
+        if self.state:
+            name = self.state.name
+        else:
+            name = self.name
+        
+        return '{name} ({kind})'.format(name=name, kind=self.kind)
+
+    def name_and_type(self):
+        return self.__str__()
 
     def get_min_max_year(self):
         min_year = self.start_year.year if self.start_year else MIN_YEAR
@@ -111,7 +120,8 @@ class Curriculum(models.Model):
 
     jurisdictions = models.ManyToManyField(
         Jurisdiction,
-        related_name='curriculums'
+        related_name='curriculums',
+        blank=True
     )
     publicbody = models.ForeignKey(
         PublicBody, null=True, blank=True,

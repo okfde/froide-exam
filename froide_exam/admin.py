@@ -13,7 +13,7 @@ class StateAdmin(admin.ModelAdmin):
     raw_id_fields = ('publicbody',)
 
 class CurriculumAdmin(admin.ModelAdmin):
-    list_display = ('name', 'start_year', 'end_year', 'kind',)
+    list_display = ('name_and_type', 'start_year', 'end_year', 'kind',)
 
 class ExamRequestAdmin(admin.ModelAdmin):
     date_hierarchy = 'timestamp'
