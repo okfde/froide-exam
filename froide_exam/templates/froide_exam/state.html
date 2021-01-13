@@ -14,7 +14,9 @@
 {% block main %}
 <h2>{{ state.name }}</h2>
 
-{{ state.description | markdown }}
+<div class="pt-3">
+  {{ state.description | markdown }}
+</div>
 
 {% if not state.is_deadend %}
 
@@ -67,7 +69,7 @@
             </a>
           {% elif not state.is_oneclick %}
             <a href="{{ subject_year.exam_request.foirequest.get_absolute_url }}#last"
-              class="badge badge-pill badge-light mt-2 {% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful{% endif %}"
+              class="badge badge-pill badge-light mt-2 {% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful-request{% endif %}"
               data-toggle="tooltip" data-placement="top"
               title="{% if subject_year.request_pending %}Schon angefragt{% elif subject_year.request_failed %}Fehlgeschlagen{% else %}Abgeschlossen{% endif %}">
               {{ subject_year.year }}
@@ -75,16 +77,16 @@
           {% else %}
             {% if not subject_year.can_request %}
             <a href="{{ subject_year.get_same_request.get_absolute_url }}"
-              class="badge badge-pill badge-light mt-2 {% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful{% endif %}"
+              class="badge badge-pill badge-light mt-2 {% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful-request{% endif %}"
               data-toggle="tooltip" data-placement="top"
               title="{% if subject_year.request_pending %}Schon angefragt{% elif subject_year.request_failed %}Fehlgeschlagen{% else %}Abgeschlossen{% endif %}">
               {{ subject_year.year }}
             </a>
             {% endif %}
           {% endif %}
-        {% endif %}
+        
 
-        {% if subject_year.can_request %}
+        {% elif subject_year.can_request %}
           {% if subject_year.is_one_click %}
           <a href="{{ subject_year.exam_request.foirequest.get_absolute_url }}#make-same-request"
             class="badge badge-pill badge-light curriculum-badge-normal mt-2 border-dark" data-toggle="tooltip"
@@ -117,7 +119,8 @@
 </table>
 
 <p class="small">
-  Es fehlt ein Fach? Bitte gib uns per <a href="mailto:max.kronmueller@okfn.de?subject=Fehlendes%20Fach">E-Mail</a> bescheid. Es können nur Fächer mit zentralen Prüfungsaufgaben angefragt werden.
+  Es fehlt ein Fach? Bitte gib uns per <a href="mailto:max.kronmueller@okfn.de?subject=Fehlendes%20Fach">E-Mail</a>
+  bescheid. Es können nur Fächer mit zentralen Prüfungsaufgaben angefragt werden.
 </p>
 
 {% endif %}

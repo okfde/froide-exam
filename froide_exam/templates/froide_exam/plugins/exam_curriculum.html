@@ -1,12 +1,19 @@
 {% load cms_tags %}
+{% load static %}
+{% load sekizai_tags %}
+
+{% block main %}
 
 <div class="row">
   {% for state in states %}
   <div class="col-md-4 mt-3">
-    <div class="card h-100">
+    <div
+      class="card h-100 {% if state.legal_status == 'public' %}exam-overview-public{% elif state.is_deadend %}exam-overview-deadend{% else %}exam-overview-requestable{% endif %}">
       <div class="card-body">
         <h5 class="card-title">
-          <a href="{{ state.get_absolute_url }}">{{ state.name }}</a>
+          <a href="{{ state.get_absolute_url }}" class="{% if state.is_deadend %}text-body{% endif %}">
+            {{ state.name }}
+          </a>
         </h5>
         <div>
           {% if state.is_deadend %}
@@ -18,9 +25,11 @@
           </small>
           {% else %}
           {% for curriculum in state.curricula %}
-          <a href="{{ state.get_absolute_url }}?kind={{ curriculum.kind }}" class="badge badge-pill badge-light mr-2"
-            data-toggle="tooltip" data-placement="top"
-            title="Schon {{ curriculum.request_count }} Anfragen">{{ curriculum.kindText }}</a>
+          <a href="{{ state.get_absolute_url }}?kind={{ curriculum.kind }}"
+            class="badge badge-pill badge-light exam-overview-badge mr-2" data-toggle="tooltip" data-placement="top"
+            title="Schon {{ curriculum.request_count }} Anfragen">
+            <i class="fa fa-chevron-right"></i> {{ curriculum.kindText }}
+          </a>
           {% endfor %}
           {% endif %}
         </div>
@@ -29,3 +38,26 @@
   </div>
   {% endfor %}
 </div>
+
+<div class="my-4">
+  <div class="d-md-flex small">
+    <div class="ml-0">
+      <i class="fa fa-circle text-success"></i> Aufgaben schon öffentlich
+    </div>
+    <div class="ml-md-2">
+      <i class="fa fa-circle text-primary"></i> Aufgaben können angefragt werden
+    </div>
+    <div class="ml-md-2">
+      <i class="fa fa-circle text-secondary"></i> Aufgaben können nicht angefragt werden
+    </div>
+  </div>
+</div>
+
+{% addtoblock 'js' %}
+<script src="{% static 'js/exam_curriculum.js' %}" charset="utf-8"></script>
+{% endaddtoblock %}
+{% addtoblock 'css' %}
+<link rel="stylesheet" src="{% static 'css/exam_curriculum.css' %}">
+{% endaddtoblock %}
+
+{% endblock %}

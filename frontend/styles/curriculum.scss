@@ -10,7 +10,7 @@ $refused: #dc3545;
 
 .curriculum-badge {
   content: "";
-  display: inline-block;
+  display: inline-flex;
   width: 0.5rem;
   height: 0.5rem;
   -moz-border-radius: 100%;
@@ -29,9 +29,20 @@ $refused: #dc3545;
   background-color: $pending;
 }
 
-.badge.curriculum-badge-successful, .badge.curriculum-badge-successful:hover {
+.badge.curriculum-badge-successful,
+.badge.curriculum-badge-successful:hover,
+.badge.curriculum-badge-successful:focus {
   color: #fff;
   background-color: $successful;
+}
+
+.badge.curriculum-badge-successful-request {
+  @extend .badge.curriculum-badge-successful;
+
+  &:before {
+    @extend .curriculum-badge;
+    background-color: #fff;
+  }
 }
 
 .curriculum-badge-refused:before {
@@ -41,4 +52,27 @@ $refused: #dc3545;
 
 .curriculum-icon-download {
   color: $normal;
+}
+
+.exam-overview-badge.badge {
+  display: inline-flex;
+  align-items: center;
+
+  .fa.fa-chevron-right {
+    font-size: 0.5rem;
+    margin: auto;
+    margin-right: 0.25rem;
+  }
+}
+
+.exam-overview-requestable.card {
+  border-left: 2px $normal solid;
+}
+
+.exam-overview-deadend.card {
+  border-left: 2px #5C748D solid;
+}
+
+.exam-overview-public.card {
+  border-left: 2px $successful solid;
 }
