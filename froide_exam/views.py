@@ -11,7 +11,7 @@ from .utils import SubjectYear, MAX_YEAR, YEARS
 
 
 def index(request):
-    return redirect('/kampagnen/verschlussache-pruefung/')
+    return redirect('/kampagnen/verschlusssache-pruefung/')
 
 def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
