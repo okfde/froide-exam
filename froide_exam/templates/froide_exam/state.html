@@ -94,7 +94,7 @@
             data-placement="top" title="Jetzt auch anfragen!">
             {{ subject_year.year }}
           </a>
-          {% else %}
+          {% elif not subject_year.exam_request %}
           <a href="{{ subject_year.make_request_url }}" class="badge badge-pill badge-light curriculum-badge-normal mt-2"
             data-toggle="tooltip" data-placement="top" title="Jetzt anfragen!">
             {{ subject_year.year }}
