@@ -62,7 +62,7 @@ def connect_request_object(sender, **kwargs):
         }
     )
 
-    if curriculum.is_oneclick():
+    if curriculum.state.is_oneclick():
         sender.not_publishable = True
         sender.save()
 
@@ -76,7 +76,7 @@ def hide_attachments(sender=None, message=None, **kwargs):
         return
     curriculum, subject, year = result
 
-    if not curriculum.is_oneclick():
+    if not curriculum.state.is_oneclick():
         return
 
     FoiAttachment.objects.filter(

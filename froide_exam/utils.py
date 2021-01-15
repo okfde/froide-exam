@@ -10,7 +10,7 @@ MIN_YEAR = 2010
 MAX_YEAR = TODAY.year if TODAY.month >= 7 else TODAY.year - 1
 YEARS = list(range(MIN_YEAR, MAX_YEAR + 1))
 
-REFERENCE_NAMESPACE = 'exam:'
+REFERENCE_NAMESPACE = 'examvsp:'
 
 
 class SubjectYear(object):
@@ -35,7 +35,23 @@ class SubjectYear(object):
     @property
     def exam_request(self):
         if self.exam_requests:
+            # if there's just one, take that one
             er = self.exam_requests[0]
+
+            # if there are multiple ones to choose from,
+            # prefer one with a url
+            # or a successful one
+            if len(self.exam_requests) > 1:
+                for request in self.exam_requests:
+                    if request.foirequest and request.foirequest.resolution == 'successful':
+                        er = request
+                        break
+
+                for request in self.exam_requests:
+                    if request.url:
+                        er = request
+                        break
+            
             return er
         return None
 
@@ -80,13 +96,13 @@ class SubjectYear(object):
         if not self.curricula:
             return
         curriculum = self.curricula[0]
-        if not curriculum.needs_request():
+        if not self.state and not self.state.needs_request():
             return False
         if self.exam_request and self.exam_request.url:
             return False
         if not self.exam_foirequest:
             return True
-        if curriculum.legal_status == 'request':
+        if self.state and self.state.legal_status == 'request':
             return False
         if not self.user.is_authenticated:
             return True
@@ -107,7 +123,7 @@ class SubjectYear(object):
         if not self.curricula:
             return
         curriculum = self.curricula[0]
-        if not curriculum.legal_status == 'request_not_publish':
+        if not self.state.legal_status == 'request_not_publish':
             return
         if not self.exam_requests:
             return
@@ -120,7 +136,7 @@ class SubjectYear(object):
             return self._request_url
         curriculum = self.curricula[0]
 
-        pb_slug = curriculum.publicbody.slug
+        pb_slug = self.state.publicbody.slug
         url = reverse('foirequest-make_request', kwargs={
             'publicbody_slug': pb_slug
         })
@@ -130,7 +146,7 @@ class SubjectYear(object):
                     kind=kind,
                     subject=self.subject,
                     year=self.year,
-                    name=curriculum.name,
+                    name=curriculum.state.name,
                     ))
         if len(subject) > 250:
             subject = subject[:250] + '...'
@@ -141,15 +157,14 @@ class SubjectYear(object):
                 subject=self.subject,
                 year=self.year,
                 kind=kind,
-                name=curriculum.name
+                name=curriculum.state.name
         )
         ref = self.get_reference(curriculum)
         query = {
             'subject': subject.encode('utf-8'),
             'body': body.encode('utf-8'),
             'ref': ref.encode('utf-8'),
-            # short, redirects to /kampagnen/frag-sie-abi/gesendet/
-            'redirect': '/k/abi'.encode('utf-8'),
+            'redirect': '/kampagnen/verschlusssache-pruefung/gesendet'.encode('utf-8'),
         }
         hide_features = (
             'hide_public', 'hide_full_text', 'hide_similar', 'hide_publicbody',

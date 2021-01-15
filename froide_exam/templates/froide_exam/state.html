@@ -1,0 +1,136 @@
+{% extends "froide_exam/base.html" %}
+{% load cms_tags %}
+{% load static %}
+{% load sekizai_tags %}
+{% load markup %}
+
+{% load i18n %}
+
+{% load foirequest_tags %}
+{% load account_tags %}
+{% load form_helper %}
+
+
+{% block main %}
+<h2>{{ state.name }}</h2>
+
+<div class="pt-3">
+  {{ state.description | markdown }}
+</div>
+
+{% if not state.is_deadend %}
+
+<table class="table mt-4">
+  <thead>
+    <tr>
+      <th>Fach</th>
+      <th>Jahrgänge</th>
+
+      {% comment "TODO: remove before launch!" --> %}
+      <th>
+        <form method="GET" id="kindform">
+          <select name="kind" class="font-weight-bold">
+            <option value="all">Alle Abschlüsse...</option>
+            {% for key, kind in kinds.items %}
+            <option value="{{ key }}" {% if kind.value == requested_kind %}selected{% endif %}>
+              {{ kind }}
+            </option>
+            {% endfor %}
+          </select>
+        </form>
+      </th>
+      {% endcomment %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for subject in subjects %}
+    <tr>
+      <td>
+        {{ subject.name }}
+      </td>
+      <td>
+        {% for subject_year in subject.years %}
+        {% comment %}<ul class="mb-4">
+          <li>{{ subject_year.can_request }}</li>
+          <li>{{ subject_year.year }}</li>
+          <li>{{ subject_year.exam_request }}</li>
+          <li>{{ subject_year.exam_request.foirequest.id }}</li>
+          <li>{{ subject_year.get_same_request.id }}</li>
+          <li>{{ subject_year.same_requests }}</li>
+          <li>{{ subject_year.request_pending }}</li>
+        </ul>{% endcomment %}
+
+        {% if subject_year.exam_request %}
+          {% if subject_year.exam_request.url %}
+            <a href="{{ subject_year.exam_request.url }}" class="badge badge-pill curriculum-badge-successful mt-2" data-toggle="tooltip"
+              data-placement="top" title="Schon öffentlich" target="_blank" rel="noopener">
+              <span class="fa fa-download"></span>
+              {{ subject_year.year }}
+            </a>
+          {% elif not state.is_oneclick %}
+            <a href="{{ subject_year.exam_request.foirequest.get_absolute_url }}#last"
+              class="badge badge-pill badge-light mt-2 {% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful-request{% endif %}"
+              data-toggle="tooltip" data-placement="top"
+              title="{% if subject_year.request_pending %}Schon angefragt{% elif subject_year.request_failed %}Fehlgeschlagen{% else %}Abgeschlossen{% endif %}">
+              {{ subject_year.year }}
+            </a>
+          {% else %}
+            {% if not subject_year.can_request %}
+            <a href="{{ subject_year.get_same_request.get_absolute_url }}"
+              class="badge badge-pill badge-light mt-2 {% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful-request{% endif %}"
+              data-toggle="tooltip" data-placement="top"
+              title="{% if subject_year.request_pending %}Schon angefragt{% elif subject_year.request_failed %}Fehlgeschlagen{% else %}Abgeschlossen{% endif %}">
+              {{ subject_year.year }}
+            </a>
+            {% endif %}
+          {% endif %}
+        
+        {% endif %}
+
+        {% if subject_year.can_request %}
+          {% if subject_year.is_one_click %}
+          <a href="{{ subject_year.exam_request.foirequest.get_absolute_url }}#make-same-request"
+            class="badge badge-pill badge-light curriculum-badge-normal mt-2 border-dark" data-toggle="tooltip"
+            data-placement="top" title="Jetzt auch anfragen!">
+            {{ subject_year.year }}
+          </a>
+          {% elif not subject_year.exam_request %}
+          <a href="{{ subject_year.make_request_url }}" class="badge badge-pill badge-light curriculum-badge-normal mt-2"
+            data-toggle="tooltip" data-placement="top" title="Jetzt anfragen!">
+            {{ subject_year.year }}
+          </a>
+          {% endif %}
+
+        {% else %}
+          {% if subject_year.request_awaiting_user %}
+          <span class="badge badge-pill badge-light curriculum-badge-pending mt-2" data-toggle="tooltip"
+            data-placement="top" title="Wird angefragt...">
+            {{ subject_year.year }}
+          </span>
+          {% endif %}
+        {% endif %}
+        {% endfor %}
+      </td>
+      {% comment "TODO: remove before launch!" --> %}
+      <td>{{ subject.curriculum.kindText }}</td>
+      {% endcomment %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p class="small">
+  Es fehlt ein Fach? Bitte gib uns per <a href="mailto:max.kronmueller@okfn.de?subject=Fehlendes%20Fach">E-Mail</a>
+  bescheid. Es können nur Fächer mit zentralen Prüfungsaufgaben angefragt werden.
+</p>
+
+{% endif %}
+
+{% addtoblock 'js' %}
+<script src="{% static 'js/exam_curriculum.js' %}" charset="utf-8"></script>
+{% endaddtoblock %}
+{% addtoblock 'css' %}
+<link rel="stylesheet" src="{% static 'css/exam_curriculum.css' %}">
+{% endaddtoblock %}
+
+{% endblock %}

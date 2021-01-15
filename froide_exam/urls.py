@@ -1,11 +1,9 @@
 from django.conf.urls import url
 
-from .views import (
-    index, curriculum_view
-)
+from .views import (index, state_view)
 
 urlpatterns = [
     url(r'^$', index, name='exam-index'),
-    url(r'^(?P<curriculum_slug>[\w-]+)/$', curriculum_view,
-        name='exam-curriculum'),
+    url(r'^(?P<state_slug>[\w-]+)/$', state_view,
+        name='exam-state'),
 ]

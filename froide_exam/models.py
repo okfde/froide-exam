@@ -18,6 +18,15 @@ LEGAL_STATUS_CHOICES = (
     ('unrequestable', _('Nicht anfragbar')),
 )
 
+KIND_CHOICES = (
+    ('abitur', _('Abitur')),
+    ('realschulabschluss', _('Realschulabschluss')),
+    ('hauptschulabschluss', _('Hauptschulabschluss')),
+)
+
+KINDS = {}
+for kind in KIND_CHOICES:
+    KINDS[kind[0]] = kind[1]
 
 class Subject(models.Model):
     name = models.CharField(max_length=255)
@@ -30,33 +39,54 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
 
-
-class Curriculum(models.Model):
+class State(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(default=None, null=True)
+    slug = models.SlugField()
+    
+    publicbody = models.ForeignKey(PublicBody, on_delete=models.CASCADE)
 
     description = models.TextField(blank=True)
 
-    jurisdictions = models.ManyToManyField(
-        Jurisdiction,
-        related_name='curriculums'
-    )
-    publicbody = models.ForeignKey(
-        PublicBody, null=True, blank=True,
-        on_delete=models.SET_NULL
-    )
-    start_year = models.DateField(null=True, blank=True)
-    end_year = models.DateField(null=True, blank=True)
-    kind = models.CharField(max_length=100, choices=(
-        ('abitur', _('Abitur')),
-    ))
     legal_status = models.CharField(
         max_length=100,
         choices=LEGAL_STATUS_CHOICES,
         default='request'
     )
 
-    content_placeholder = PlaceholderField('content')
+    class Meta:
+        verbose_name = ('state')
+        verbose_name_plural = _('states')
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+    def needs_request(self):
+        return self.legal_status.startswith('request')
+
+    def is_deadend(self):
+        return self.legal_status == 'unrequestable'
+
+    def is_oneclick(self):
+        return self.legal_status == 'request_not_publish'
+
+    def get_absolute_url(self):
+        if self.slug:
+            return('app/{}'.format(self.slug))
+        return ''
+
+
+class Curriculum(models.Model):
+    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
+    
+    state = models.ForeignKey(
+        State,
+        null=True,
+        on_delete=models.SET_NULL
+    )
+
+    start_year = models.DateField(null=True, blank=True)
+    end_year = models.DateField(null=True, blank=True)
 
     subjects = models.ManyToManyField(Subject)
 
@@ -66,14 +96,16 @@ class Curriculum(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
+        name = ''
+        if self.state:
+            name = self.state.name
+        else:
+            name = self.name
+        
+        return '{name} ({kind})'.format(name=name, kind=self.kind)
 
-    def get_absolute_url(self):
-        if self.slug:
-            return reverse('exam-curriculum', kwargs={
-                'curriculum_slug': self.slug
-            })
-        return ''
+    def name_and_type(self):
+        return self.__str__()
 
     def get_min_max_year(self):
         min_year = self.start_year.year if self.start_year else MIN_YEAR
@@ -84,14 +116,26 @@ class Curriculum(models.Model):
         min_year, max_year = self.get_min_max_year()
         return min_year <= year <= max_year
 
-    def needs_request(self):
-        return self.legal_status.startswith('request')
+    # legacy fields: technically no longer required
 
-    def is_deadend(self):
-        return self.legal_status == 'unrequestable'
-
-    def is_oneclick(self):
-        return self.legal_status == 'request_not_publish'
+    jurisdictions = models.ManyToManyField(
+        Jurisdiction,
+        related_name='curriculums',
+        blank=True
+    )
+    publicbody = models.ForeignKey(
+        PublicBody, null=True, blank=True,
+        on_delete=models.SET_NULL
+    )
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(default=None, null=True)
+    content_placeholder = PlaceholderField('content')
+    description = models.TextField(blank=True)
+    legal_status = models.CharField(
+        max_length=100,
+        choices=LEGAL_STATUS_CHOICES,
+        default='request'
+    )
 
 
 class ExamRequest(models.Model):
