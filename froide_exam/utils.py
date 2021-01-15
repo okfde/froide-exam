@@ -10,7 +10,7 @@ MIN_YEAR = 2010
 MAX_YEAR = TODAY.year if TODAY.month >= 7 else TODAY.year - 1
 YEARS = list(range(MIN_YEAR, MAX_YEAR + 1))
 
-REFERENCE_NAMESPACE = 'exam:'
+REFERENCE_NAMESPACE = 'examvsp:'
 
 
 class SubjectYear(object):
@@ -164,8 +164,7 @@ class SubjectYear(object):
             'subject': subject.encode('utf-8'),
             'body': body.encode('utf-8'),
             'ref': ref.encode('utf-8'),
-            # short, redirects to /kampagnen/frag-sie-abi/gesendet/
-            'redirect': '/k/abi'.encode('utf-8'),
+            'redirect': '/kampagnen/verschlusssache-pruefung/gesendet'.encode('utf-8'),
         }
         hide_features = (
             'hide_public', 'hide_full_text', 'hide_similar', 'hide_publicbody',
