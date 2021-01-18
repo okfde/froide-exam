@@ -18,28 +18,25 @@
   {{ state.description | markdown }}
 </div>
 
-{% if not state.is_deadend %}
+{% if not state.is_deadend and state.legal_status != 'public' %}
 
 <table class="table mt-4">
   <thead>
     <tr>
       <th>Fach</th>
-      <th>Jahrgänge</th>
-
-      {% comment "TODO: remove before launch!" --> %}
+      <th>Jahrgänge</th>      
       <th>
-        <form method="GET" id="kindform">
-          <select name="kind" class="font-weight-bold">
+        <form method="GET" id="typeform">
+          <select name="type" class="font-weight-bold">
             <option value="all">Alle Abschlüsse...</option>
-            {% for key, kind in kinds.items %}
-            <option value="{{ key }}" {% if kind.value == requested_kind %}selected{% endif %}>
-              {{ kind }}
+            {% for type in types %}
+            <option value="{{ type.slug }}" {% if type.slug == requested_type %}selected{% endif %}>
+              {{ type.name }}
             </option>
             {% endfor %}
           </select>
         </form>
       </th>
-      {% endcomment %}
     </tr>
   </thead>
   <tbody>
@@ -111,15 +108,28 @@
         {% endif %}
         {% endfor %}
       </td>
-      {% comment "TODO: remove before launch!" --> %}
-      <td>{{ subject.curriculum.kindText }}</td>
-      {% endcomment %}
+      <td>{{ subject.curriculum.name }}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
-<p class="small">
+<div class="d-md-flex small mt-3">
+  <div>
+    <i class="fa fa-circle text-primary"></i> Jetzt anfragen!
+  </div>
+  <div class="ml-md-3">
+    <i class="fa fa-circle text-success"></i> Anfrage erfolgreich/schon öffentlich
+  </div>
+  <div class="ml-md-3">
+    <i class="fa fa-circle text-warning"></i> Anfrage läuft
+  </div>
+  <div class="ml-md-3">
+    <i class="fa fa-circle text-danger"></i> Anfrage abgelehnt
+  </div>
+</div>
+
+<p class="small mt-3">
   Es fehlt ein Fach? Bitte gib uns per <a href="mailto:max.kronmueller@okfn.de?subject=Fehlendes%20Fach">E-Mail</a>
   Bescheid. Es können nur Fächer mit zentralen Prüfungsaufgaben angefragt werden.
 </p>

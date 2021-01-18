@@ -6,7 +6,7 @@ from django.db import models
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
-from .models import State, Curriculum, KIND_CHOICES
+from .models import State, Curriculum
 
 
 @plugin_pool.register_plugin
@@ -28,15 +28,7 @@ class ExamCurriculumPlugin(CMSPluginBase):
                     filter=models.Q(examrequest__foirequest__isnull=False)
                 )
             )
-            state.curricula = []
-
-            for curriculum in curricula:
-                # TODO: remove before launch!
-                if curriculum.kind != 'abitur':
-                    continue
-
-                curriculum.kindText = list(filter(lambda kind: kind[0] == curriculum.kind, KIND_CHOICES))[0][1]
-                state.curricula.append(curriculum)
+            state.curricula = curricula
 
         context.update({ 'states': states })
         return context

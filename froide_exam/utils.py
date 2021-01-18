@@ -140,24 +140,24 @@ class SubjectYear(object):
         url = reverse('foirequest-make_request', kwargs={
             'publicbody_slug': pb_slug
         })
-        kind = curriculum.get_kind_display()
-        subject = ('{kind}-Aufgaben im Fach {subject} '
-                   'im Jahr {year} in {name}'.format(
-                    kind=kind,
+        name = curriculum.name
+        subject = ('{name}-Aufgaben im Fach {subject} '
+                   'im Jahr {year} in {state}'.format(
+                    name=name,
                     subject=self.subject,
                     year=self.year,
-                    name=curriculum.state.name,
+                    state=curriculum.state.name,
                     ))
         if len(subject) > 250:
             subject = subject[:250] + '...'
         body = (
             'Die Aufgaben, Erwartungshorizonte und Lösungen für die '
-            '{kind}-Prüfung im Fach {subject} aus dem Jahr {year} in {name}.'
+            '{name}-Prüfung im Fach {subject} aus dem Jahr {year} in {state}.'
         ).format(
                 subject=self.subject,
                 year=self.year,
-                kind=kind,
-                name=curriculum.state.name
+                name=name,
+                state=curriculum.state.name
         )
         ref = self.get_reference(curriculum)
         query = {

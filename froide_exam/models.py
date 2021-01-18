@@ -24,10 +24,6 @@ KIND_CHOICES = (
     ('hauptschulabschluss', _('Hauptschulabschluss')),
 )
 
-KINDS = {}
-for kind in KIND_CHOICES:
-    KINDS[kind[0]] = kind[1]
-
 class Subject(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -77,7 +73,8 @@ class State(models.Model):
 
 
 class Curriculum(models.Model):
-    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField()
     
     state = models.ForeignKey(
         State,
@@ -96,15 +93,12 @@ class Curriculum(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        name = ''
         if self.state:
-            name = self.state.name
-        else:
-            name = self.name
-        
-        return '{name} ({kind})'.format(name=name, kind=self.kind)
+            return self.state.name
 
-    def name_and_type(self):
+        return self.name
+
+    def state_name(self):
         return self.__str__()
 
     def get_min_max_year(self):
@@ -118,6 +112,7 @@ class Curriculum(models.Model):
 
     # legacy fields: technically no longer required
 
+    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
     jurisdictions = models.ManyToManyField(
         Jurisdiction,
         related_name='curriculums',
@@ -127,8 +122,6 @@ class Curriculum(models.Model):
         PublicBody, null=True, blank=True,
         on_delete=models.SET_NULL
     )
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(default=None, null=True)
     content_placeholder = PlaceholderField('content')
     description = models.TextField(blank=True)
     legal_status = models.CharField(

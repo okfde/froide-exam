@@ -2,13 +2,15 @@ from collections import defaultdict
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
+from django.http import Http404
 
 from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
 
-from .models import State, Curriculum, ExamRequest, KINDS
+from .models import State, Curriculum, ExamRequest
 from .utils import SubjectYear, MAX_YEAR, YEARS
 
+ALL = 'all'
 
 def index(request):
     return redirect('/kampagnen/verschlusssache-pruefung/')
@@ -16,27 +18,25 @@ def index(request):
 def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
     
-    # check if ?kind=... is ok
-    kind_ids = KINDS.keys()
-    requested_kind = request.GET.get('kind')
-    requested_kind = requested_kind if requested_kind in kind_ids else False
-    
-    # TODO: remove on launch!
-    # this emulates the old FragSieAbi site and only allows Abitur requests
-    requested_kind = 'abitur'
-    
-    curricula = []
+    all_curricula = Curriculum.objects.filter(state=state)
+    types = map(lambda c: { 'name': c.name, 'slug': c.slug }, all_curricula)
 
-    # TODO: better way to this?
-    if requested_kind:
-        curricula = Curriculum.objects.filter(state=state, kind=requested_kind)
+    curricula = []
+    requested_type = request.GET.get('type')
+    if requested_type and requested_type != ALL:
+        curricula = list(filter(lambda c: c.slug == requested_type, all_curricula))
     else:
-        curricula = Curriculum.objects.filter(state=state)
+        curricula = all_curricula
+
+    # if no curricula match the request, throw a 404
+    # states, that can't be requested don't need curricula to begin with,
+    # so we make an exception for them
+    if len(curricula) == 0 and state.legal_status.startswith('request'):
+        raise Http404
     
     display_years = list(reversed(YEARS))
 
-    subjects_done = []
-
+    all_subjects = []
     for curriculum in curricula:
         subjects = curriculum.subjects.all()
 
@@ -90,20 +90,12 @@ def state_view(request, state_slug=None):
                 subject_year.state = state
             
             subject.curriculum = curriculum
-            subjects_done.append(subject)
-
-        curriculum.kindText = KINDS[curriculum.kind]
-
-    # TODO: remove before launch!
-    # this emulates the old FragSieAbi site and only allows Abitur requests
-    OVERWRITE_KINDS = {
-        'abitur': 'Abitur'
-    }
+            all_subjects.append(subject)
 
     return render(request, 'froide_exam/state.html', {
         'years': display_years,
-        'subjects': subjects_done,
+        'subjects': all_subjects,
         'state': state,
-        'kinds': OVERWRITE_KINDS, # TODO: remove before launch!
-        'requested_kind': requested_kind
+        'types': types,
+        'requested_type': requested_type
     })
