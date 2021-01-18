@@ -16,7 +16,11 @@
           </a>
         </h5>
         <div>
-          {% if state.is_deadend %}
+          {% if state.legal_status == 'public' %}
+          <small class="text-secondary">
+            <i class="fa fa-check"></i> Die Aufgaben sind bereits öffentlich!
+          </small>
+          {% elif state.is_deadend %}
           <small class="text-secondary">
             Kann nicht angefragt werden.
             <a href="./faq/#ablehnungen" data-toggle="tooltip" data-placement="top" title="Mehr Informationen">
