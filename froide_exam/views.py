@@ -15,6 +15,16 @@ ALL = 'all'
 def index(request):
     return redirect('/kampagnen/verschlusssache-pruefung/')
 
+def sent(request):
+    request_id = request.GET.get('request')
+    request_url = '/a/' + request_id if request_id else '/account/requests/'
+    share_url = 'https://fragdenstaat.de' + (request_url if request_id else '/vsp')
+    
+    return render(request, 'froide_exam/sent.html', {
+        'request_url': request_url,
+        'share_url': share_url
+    })
+
 def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
     

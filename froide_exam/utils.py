@@ -164,7 +164,7 @@ class SubjectYear(object):
             'subject': subject.encode('utf-8'),
             'body': body.encode('utf-8'),
             'ref': ref.encode('utf-8'),
-            'redirect': '/kampagnen/verschlusssache-pruefung/gesendet'.encode('utf-8'),
+            'redirect': '/kampagnen/verschlusssache-pruefung/app/gesendet'.encode('utf-8'),
         }
         hide_features = (
             'hide_public', 'hide_full_text', 'hide_similar', 'hide_publicbody',
