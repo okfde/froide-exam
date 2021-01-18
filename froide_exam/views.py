@@ -31,7 +31,7 @@ def state_view(request, state_slug=None):
     # if no curricula match the request, throw a 404
     # states, that can't be requested don't need curricula to begin with,
     # so we make an exception for them
-    if len(curricula) == 0 and state.legal_status.startswith('request'):
+    if len(curricula) == 0 and state.needs_request():
         raise Http404
     
     display_years = list(reversed(YEARS))

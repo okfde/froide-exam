@@ -18,7 +18,7 @@
   {{ state.description | markdown }}
 </div>
 
-{% if not state.is_deadend and state.legal_status != 'public' %}
+{% if state.needs_request %}
 
 <table class="table mt-4">
   <thead>
