@@ -30,5 +30,11 @@ class ExamCurriculumPlugin(CMSPluginBase):
             )
             state.curricula = curricula
 
+        states = sorted(
+            states,
+            key=lambda s: s.needs_request() or s.legal_status == 'public',
+            reverse=True
+        )
+
         context.update({ 'states': states })
         return context
