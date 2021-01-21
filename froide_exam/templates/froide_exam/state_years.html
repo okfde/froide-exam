@@ -37,7 +37,7 @@
   {% endif %}
 
   {% if subject_year.can_request %}
-    {% if subject_year.is_one_click %}
+    {% if subject_year.is_one_click and subject_year.exam_request.foirequest %}
     <a href="{{ subject_year.exam_request.foirequest.get_absolute_url }}#make-same-request"
       class="badge badge-pill badge-light curriculum-badge-normal mt-2 border-dark" data-toggle="tooltip"
       data-placement="top" title="Jetzt auch anfragen!">

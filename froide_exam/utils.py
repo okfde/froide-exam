@@ -12,6 +12,9 @@ YEARS = list(range(MIN_YEAR, MAX_YEAR + 1))
 
 REFERENCE_NAMESPACE = 'examvsp:'
 
+# waiting requests with no response in 3 months are stale
+# and should be requested by another user again
+STALE_THRESHOLD = 90
 
 class SubjectYear(object):
 
@@ -35,24 +38,35 @@ class SubjectYear(object):
     @property
     def exam_request(self):
         if self.exam_requests:
-            # if there's just one, take that one
-            er = self.exam_requests[0]
+            er = None
 
-            # if there are multiple ones to choose from,
-            # prefer one with a url
-            # or a successful one
-            if len(self.exam_requests) > 1:
-                for request in self.exam_requests:
-                    if request.foirequest and request.foirequest.resolution == 'successful':
-                        er = request
-                        break
+            with_success = None
+            with_url = None
+            by_user = None
 
-                for request in self.exam_requests:
-                    if request.url:
-                        er = request
-                        break
+            for request in self.exam_requests:
+                if request.foirequest:
+                    foirequest = request.foirequest
+                    if is_request_stale(foirequest):
+                        # this one is stale. allow to re-request by someone else.
+                        if self.user != foirequest.user:
+                            continue
+                    
+                    if self.user == foirequest.user:
+                        by_user = request
+
+                    if foirequest.resolution == 'successful':
+                        with_success = request
+
+                if request.url:
+                    with_url = request
+                    break # we already have our favorite, so stop
+
+                er = request
             
-            return er
+            # prefer one with a url, then a successful one,
+            # then one created by the current user
+            return with_url or with_success or by_user or er
         return None
 
     @property
@@ -93,17 +107,17 @@ class SubjectYear(object):
         return 'successful' not in fr.resolution
 
     def can_request(self):
-        if not self.curricula:
-            return
-        curriculum = self.curricula[0]
         if not self.state and not self.state.needs_request():
             return False
         if self.exam_request and self.exam_request.url:
             return False
         if not self.exam_foirequest:
             return True
-        if self.state and self.state.legal_status == 'request':
-            return False
+        # TODO: i don't understand this line. why don't we allow users
+        # to request, when the legal status is 'request'?
+        # caused issues, so i removed it
+        """ if self.state and self.state.legal_status == 'request':
+            return False """
         if not self.user.is_authenticated:
             return True
         if self.has_requested():
@@ -120,14 +134,9 @@ class SubjectYear(object):
             return self.same_requests[self.exam_request.foirequest_id]
 
     def is_one_click(self):
-        if not self.curricula:
-            return
-        curriculum = self.curricula[0]
-        if not self.state.legal_status == 'request_not_publish':
-            return
-        if not self.exam_requests:
-            return
-        return self.exam_requests[0].foirequest
+        if self.state.legal_status != 'request_not_publish':
+            return False
+        return self.exam_foirequest
 
     def make_request_url(self):
         if not self.curricula:
@@ -174,3 +183,7 @@ class SubjectYear(object):
         query = urlencode(query)
         self._request_url = '%s?%s' % (url, query)
         return self._request_url
+
+def is_request_stale(foirequest):
+    last_message = (timezone.now() - foirequest.last_message).days
+    return foirequest.awaits_response() and last_message > STALE_THRESHOLD

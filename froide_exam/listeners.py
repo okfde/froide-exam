@@ -4,7 +4,7 @@ from django.utils import timezone
 from froide.foirequest.models import FoiAttachment
 
 from .models import ExamRequest, Subject, Curriculum
-from .utils import REFERENCE_NAMESPACE
+from .utils import REFERENCE_NAMESPACE, is_request_stale
 
 
 def from_reference(reference):
@@ -52,7 +52,7 @@ def connect_request_object(sender, **kwargs):
 
     year_date = timezone.make_aware(datetime(year, 1, 1))
 
-    er, _ = ExamRequest.objects.get_or_create(
+    er, created = ExamRequest.objects.get_or_create(
         curriculum=curriculum,
         subject=subject,
         start_year=year_date,
@@ -61,6 +61,20 @@ def connect_request_object(sender, **kwargs):
             'foirequest': sender,
         }
     )
+
+    if not created and is_request_stale(er.foirequest):
+        # there already is an existing exam request
+        # since it's stale however, we'll abandon the old one
+        # and add a new one. we won't overwrite the old one,
+        # so it is still marked as a pending request for the
+        # original requester in the interface.
+        ExamRequest.objects.create(
+            curriculum=curriculum,
+            subject=subject,
+            start_year=year_date,
+            timestamp=sender.first_message,
+            foirequest=sender
+        )
 
     if curriculum.state.is_oneclick():
         sender.not_publishable = True
