@@ -94,7 +94,7 @@ class Curriculum(models.Model):
 
     def __str__(self):
         if self.state:
-            return self.state.name
+            return '{state} ({name})'.format(state=self.state.name, name=self.name)
 
         return self.name
 
