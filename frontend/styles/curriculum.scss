@@ -1,3 +1,6 @@
+
+@import '~froide/frontend/styles/variables';
+
 $normal: #007bff;
 $pending: #ffc107;
 $successful: #28a745;
@@ -54,9 +57,71 @@ $refused: #dc3545;
   color: $normal;
 }
 
+
+
+table.exam-state-table {
+  .curriculum-name {
+    display: none;
+    color: $secondary;
+  }
+
+  @include media-breakpoint-only(xs) {
+    .curriculum-name {
+      display: inline;
+    }  
+
+    thead, tbody {
+      display: block;
+    }
+
+    thead tr {
+      display: flex;
+
+      th {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      th:nth-child(2) {
+        display: none;
+      }
+
+      th:nth-child(3) {
+        flex: 1;
+        text-align: right;
+      }
+    }
+
+    tbody {
+      tr {
+        display: flex;
+        flex-direction: column;
+      }
+
+      td {
+        padding: 1.25rem 0;
+      }
+
+      td:nth-child(1) {
+        padding-bottom: 0.5rem;
+      }
+
+      td:nth-child(2) {
+        border-top: none;
+        padding-top: 0;
+      }
+
+      td:nth-child(3) {
+        display: none;
+      }
+    }
+  }
+}
+
 .exam-overview-badge.badge {
   display: inline-flex;
   align-items: center;
+  font-weight: normal;
 
   .fa.fa-chevron-right {
     font-size: 0.5rem;

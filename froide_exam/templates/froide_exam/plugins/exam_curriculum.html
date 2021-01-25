@@ -4,9 +4,9 @@
 
 {% block main %}
 
-<div class="row">
+<div class="row justify-content-center">
   {% for state in states %}
-  <div class="col-md-4 mt-3">
+  <div class="col-md-6 mt-3">
     <div
       class="card h-100 {% if state.legal_status == 'public' %}exam-overview-public{% elif state.is_deadend %}exam-overview-deadend{% else %}exam-overview-requestable{% endif %}">
       <div class="card-body">
@@ -16,19 +16,24 @@
           </a>
         </h5>
         <div>
-          {% if state.is_deadend %}
+          {% if state.legal_status == 'public' %}
+          <small class="text-secondary">
+            <i class="fa fa-check"></i> Die Aufgaben sind bereits öffentlich!
+          </small>
+          {% elif state.is_deadend %}
           <small class="text-secondary">
             Kann nicht angefragt werden.
-            <a href="./faq/#ablehnungen" data-toggle="tooltip" data-placement="top" title="Mehr Informationen">
+            <a href="./faq/#ablehnungen" class="badge badge-pill badge-light exam-overview-badge" data-toggle="tooltip"
+              data-placement="top" title="Mehr Informationen">
               <i class="fa fa-question"></i>
             </a>
           </small>
           {% else %}
           {% for curriculum in state.curricula %}
-          <a href="{{ state.get_absolute_url }}?kind={{ curriculum.kind }}"
+          <a href="{{ state.get_absolute_url }}?type={{ curriculum.slug }}"
             class="badge badge-pill badge-light exam-overview-badge mr-2" data-toggle="tooltip" data-placement="top"
             title="Schon {{ curriculum.request_count }} Anfragen">
-            <i class="fa fa-chevron-right"></i> {{ curriculum.kindText }}
+            <i class="fa fa-chevron-right"></i> {{ curriculum.name }}
           </a>
           {% endfor %}
           {% endif %}
@@ -41,13 +46,13 @@
 
 <div class="my-4">
   <div class="d-md-flex small">
-    <div class="ml-0">
+    <div>
       <i class="fa fa-circle text-success"></i> Aufgaben schon öffentlich
     </div>
-    <div class="ml-md-2">
+    <div class="ml-md-3">
       <i class="fa fa-circle text-primary"></i> Aufgaben können angefragt werden
     </div>
-    <div class="ml-md-2">
+    <div class="ml-md-3">
       <i class="fa fa-circle text-secondary"></i> Aufgaben können nicht angefragt werden
     </div>
   </div>

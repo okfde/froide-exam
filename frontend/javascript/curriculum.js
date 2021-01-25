@@ -1,7 +1,7 @@
 import '../styles/curriculum.scss';
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('#kindform select').addEventListener('change', () => {
-    document.querySelector('#kindform').submit()
+  document.querySelector('#typeform select').addEventListener('change', () => {
+    document.querySelector('#typeform').submit()
   })
 })
