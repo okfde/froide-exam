@@ -52,17 +52,13 @@ def connect_request_object(sender, **kwargs):
 
     year_date = timezone.make_aware(datetime(year, 1, 1))
 
-    er, created = ExamRequest.objects.get_or_create(
+    er = ExamRequest.objects.filter(
         curriculum=curriculum,
         subject=subject,
-        start_year=year_date,
-        defaults={
-            'timestamp': sender.first_message,
-            'foirequest': sender,
-        }
-    )
+        start_year=year_date
+    ).first()
 
-    if not created and is_request_stale(er.foirequest):
+    if not er or is_request_stale(er.foirequest):
         # there already is an existing exam request
         # since it's stale however, we'll abandon the old one
         # and add a new one. we won't overwrite the old one,
