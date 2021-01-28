@@ -1,9 +1,9 @@
 import '../styles/curriculum.scss'
 
 document.addEventListener('DOMContentLoaded', () => {
-  const typeform = document.querySelector('#typeform select')
+  const select = document.querySelector('#typeform select')
 
-  typeform && typeform.addEventListener('change', () => {
-    typeform.submit()
+  select && select.addEventListener('change', () => {
+    document.querySelector('#typeform').submit()
   })
 })
