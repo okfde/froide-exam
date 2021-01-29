@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 
 from .models import Subject, State, Curriculum, ExamRequest
 
@@ -20,7 +22,25 @@ class ExamRequestAdmin(admin.ModelAdmin):
     list_filter = (
         'foirequest__status', 'foirequest__resolution',
         'curriculum')
+    list_display = ('name', 'timestamp', 'link',)
     raw_id_fields = ('foirequest',)
+
+    def name(self, obj):
+        return obj.__str__()
+    
+    def link(self, obj):
+        url = None
+        title = _('Externer Link')
+
+        if obj.url:
+            url = obj.url
+        elif obj.foirequest:
+            url = obj.foirequest.url
+            title = obj.foirequest.title
+        else:
+            return None
+
+        return format_html('<a href="{}" target="_blank">{}</a>', url, title)
 
 
 admin.site.register(Subject, SubjectAdmin)
