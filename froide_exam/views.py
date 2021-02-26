@@ -72,7 +72,7 @@ def state_view(request, state_slug=None):
             s.years = [
                 SubjectYear(
                     user=request.user, subject=s, year=year,
-                    same_requests=same_requests
+                    same_requests=same_requests, state=state
                 )
                 for year in display_years
             ]
@@ -97,7 +97,6 @@ def state_view(request, state_slug=None):
                 subject_year = subject.years[index]
                 subject_year.exam_requests = exam_request_map[(subject.id, year)]
                 subject_year.curricula = cu_map[(subject.id, year)]
-                subject_year.state = state
             
             subject.curriculum = curriculum
             all_subjects.append(subject)

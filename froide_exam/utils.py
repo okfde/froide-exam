@@ -18,11 +18,12 @@ STALE_THRESHOLD = 90
 
 class SubjectYear(object):
 
-    def __init__(self, user=None, subject=None, year=None, same_requests=None):
+    def __init__(self, user=None, subject=None, year=None, same_requests=None, state=None):
         self.subject = subject
         self.year = year
         self.user = user
         self.same_requests = same_requests
+        self.state = state
 
     def __str__(self):
         return '{}: {}'.format(self.subject, self.year)
@@ -73,11 +74,16 @@ class SubjectYear(object):
     def exam_foirequest(self):
         if not self.exam_requests:
             return None
-        er = self.exam_requests[0]
-        if (not er.foirequest or
-                er.foirequest.status == 'awaiting_user_confirmation'):
+        
+        exam_requests = list(filter(
+            lambda er: er.foirequest and er.foirequest.status != 'awaiting_user_confirmation',
+            self.exam_requests
+        ))
+        
+        if (len(exam_requests) == 0):
             return None
-        return er
+
+        return exam_requests[-1]
 
     @property
     def request_awaiting_user(self):
@@ -113,11 +119,8 @@ class SubjectYear(object):
             return False
         if not self.exam_foirequest:
             return True
-        # TODO: i don't understand this line. why don't we allow users
-        # to request, when the legal status is 'request'?
-        # caused issues, so i removed it
-        """ if self.state and self.state.legal_status == 'request':
-            return False """
+        if self.state.legal_status == 'request_not_publish' and not self.user_requested():
+            return True
         if not self.user.is_authenticated:
             return True
         if self.has_requested():
@@ -132,6 +135,9 @@ class SubjectYear(object):
             return
         if self.exam_request.foirequest_id in self.same_requests:
             return self.same_requests[self.exam_request.foirequest_id]
+
+    def user_requested(self):
+        return self.exam_request.foirequest and self.user == self.exam_request.foirequest.user
 
     def is_one_click(self):
         if self.state.legal_status != 'request_not_publish':
@@ -183,6 +189,46 @@ class SubjectYear(object):
         query = urlencode(query)
         self._request_url = '%s?%s' % (url, query)
         return self._request_url
+
+    def get_request_state(self):
+        if self.request_pending:
+            return ('pending', 'Schon angefragt')
+        elif self.request_failed:
+            return ('refused', 'Fehlgeschlagen')
+        elif self.request_successful:
+            return ('successful', 'Abgeschlossen')
+        else:
+            return ('request', 'Jetzt anfragen!')
+        
+    def display(self):
+        if self.exam_request:
+            if self.exam_request.url:
+                return {
+                    'link': self.exam_request.url,
+                    'title': 'Schon öffentlich',
+                    'state': 'successful',
+                    'icon': 'download'
+                }
+            elif not self.state.is_one_click:
+                state, title = self.get_request_state()
+                return {
+                    'link': self.exam_request.foirequest.get_absolute_url() + '#last',
+                    'state': state,
+                    'title': title
+                }
+            elif not self.can_request:
+                state, title = self.get_request_state()
+                return {
+                    'link': self.get_same_request.get_absolute_url(),
+                    'state': state,
+                    'title': title
+                }
+        
+        if self.can_request:
+            if self.is_one_click and self.exam_request.foi:
+                return False
+
+                
 
 def is_request_stale(foirequest):
     last_message = (timezone.now() - foirequest.last_message).days

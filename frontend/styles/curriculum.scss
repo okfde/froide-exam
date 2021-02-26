@@ -1,35 +1,25 @@
 
 @import '~froide/frontend/styles/variables';
 
-$normal: #007bff;
-$pending: #ffc107;
-$successful: #28a745;
-$refused: #dc3545;
+$normal: $blue-500;
+$pending: $yellow;
+$successful: $green;
+$refused: $red;
 
-.curriculum-badge {
-  font-size: 0.8rem;
-  font-weight: normal;
-}
-
-.curriculum-badge {
-  content: "";
+.badge.curriculum-badge {
   display: inline-flex;
-  width: 0.5rem;
-  height: 0.5rem;
-  -moz-border-radius: 100%;
-  -webkit-border-radius: 100%;
-  border-radius: 100%;
-  margin-right: 0.2rem;
-}
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  margin: 0.25rem;
 
-.curriculum-badge-normal:before {
-  @extend .curriculum-badge;
-  background-color: $normal;
-}
+  .fa {
+    margin-right: 0.25rem;
+  }
 
-.curriculum-badge-pending:before {
-  @extend .curriculum-badge;
-  background-color: $pending;
+  .fa.fa-circle {
+    font-size: 0.5rem;
+  }
 }
 
 .badge.curriculum-badge-successful,
@@ -39,24 +29,21 @@ $refused: #dc3545;
   background-color: $successful;
 }
 
-.badge.curriculum-badge-successful-request {
-  @extend .badge.curriculum-badge-successful;
-
-  &:before {
-    @extend .curriculum-badge;
-    background-color: #fff;
-  }
-}
-
-.curriculum-badge-refused:before {
-  @extend .curriculum-badge;
-  background-color: $refused;
-}
-
 .curriculum-icon-download {
   color: $normal;
 }
 
+.curriculum-badge-normal i.fa {
+  color: $normal;
+}
+
+.curriculum-badge-pending i.fa {
+  color: $pending;
+}
+
+.curriculum-badge-refused i.fa {
+  color: $refused;
+}
 
 
 table.exam-state-table {

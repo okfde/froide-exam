@@ -46,7 +46,9 @@
         {{ subject.name }} <span class="curriculum-name">({{ subject.curriculum.name }})</span>
       </td>
       <td class="">
-        {% include "./state_years.html" %}
+        <div class="d-flex">
+          {% include "./state_years.html" %}
+        </div>
       </td>
       <td>{{ subject.curriculum.name }}</td>
     </tr>
