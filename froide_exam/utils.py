@@ -3,7 +3,6 @@ from urllib.parse import urlencode
 from django.utils import timezone
 from django.urls import reverse
 
-from froide.foirequest.models import FoiRequest
 
 TODAY = timezone.now().date()
 MIN_YEAR = 2010
