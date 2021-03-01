@@ -137,7 +137,9 @@ class SubjectYear(object):
             return self.same_requests[self.exam_request.foirequest_id]
 
     def user_requested(self):
-        return self.exam_request.foirequest and self.user == self.exam_request.foirequest.user
+        return self.exam_request
+            and self.exam_request.foirequest
+            and self.user == self.exam_request.foirequest.user
 
     def is_one_click(self):
         if self.state.legal_status != 'request_not_publish':
