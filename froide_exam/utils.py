@@ -3,6 +3,7 @@ from urllib.parse import urlencode
 from django.utils import timezone
 from django.urls import reverse
 
+from froide.foirequest.models import FoiRequest
 
 TODAY = timezone.now().date()
 MIN_YEAR = 2010
@@ -16,9 +17,11 @@ REFERENCE_NAMESPACE = 'examvsp:'
 # and should be requested by another user again
 STALE_THRESHOLD = 90
 
+
 class SubjectYear(object):
 
-    def __init__(self, user=None, subject=None, year=None, same_requests=None, state=None):
+    def __init__(self, user=None, subject=None, year=None, same_requests=None,
+                 state=None):
         self.subject = subject
         self.year = year
         self.user = user
@@ -49,10 +52,11 @@ class SubjectYear(object):
                 if request.foirequest:
                     foirequest = request.foirequest
                     if is_request_stale(foirequest):
-                        # this one is stale. allow to re-request by someone else.
+                        # this one is stale.
+                        # allow to re-request by someone else.
                         if self.user != foirequest.user:
                             continue
-                    
+
                     if self.user == foirequest.user:
                         by_user = request
 
@@ -61,10 +65,10 @@ class SubjectYear(object):
 
                 if request.url:
                     with_url = request
-                    break # we already have our favorite, so stop
+                    break  # we already have our favorite, so stop
 
                 er = request
-            
+
             # prefer one with a url, then a successful one,
             # then one created by the current user
             return with_url or with_success or by_user or er
@@ -74,13 +78,13 @@ class SubjectYear(object):
     def exam_foirequest(self):
         if not self.exam_requests:
             return None
-        
-        exam_requests = list(filter(
-            lambda er: er.foirequest and er.foirequest.status != 'awaiting_user_confirmation',
-            self.exam_requests
-        ))
-        
-        if (len(exam_requests) == 0):
+
+        def request_valid(er):
+            return er.foirequest and er.foirequest.is_sent()
+
+        exam_requests = list(filter(request_valid, self.exam_requests))
+
+        if len(exam_requests) == 0:
             return None
 
         return exam_requests[-1]
@@ -92,7 +96,7 @@ class SubjectYear(object):
         if not self.exam_request.foirequest:
             return False
         er = self.exam_request
-        return er.foirequest.status == 'awaiting_user_confirmation'
+        return er.foirequest.awaits_user_confirmation()
 
     @property
     def request_pending(self):
@@ -119,7 +123,8 @@ class SubjectYear(object):
             return False
         if not self.exam_foirequest:
             return True
-        if self.state.legal_status == 'request_not_publish' and not self.user_requested():
+        if (self.state.legal_status == 'request_not_publish' and
+                not self.user_requested()):
             return True
         if not self.user.is_authenticated:
             return True
@@ -137,9 +142,11 @@ class SubjectYear(object):
             return self.same_requests[self.exam_request.foirequest_id]
 
     def user_requested(self):
-        return self.exam_request
-            and self.exam_request.foirequest
-            and self.user == self.exam_request.foirequest.user
+        return (
+            self.exam_request and
+            self.exam_request.foirequest and
+            self.user == self.exam_request.foirequest.user
+        )
 
     def is_one_click(self):
         if self.state.legal_status != 'request_not_publish':
@@ -177,11 +184,12 @@ class SubjectYear(object):
                 state=curriculum.state.name
         )
         ref = self.get_reference(curriculum)
+        redirect_path = '/kampagnen/verschlusssache-pruefung/app/gesendet'
         query = {
             'subject': subject.encode('utf-8'),
             'body': body.encode('utf-8'),
             'ref': ref.encode('utf-8'),
-            'redirect': '/kampagnen/verschlusssache-pruefung/app/gesendet'.encode('utf-8'),
+            'redirect': redirect_path.encode('utf-8'),
         }
         hide_features = (
             'hide_public', 'hide_full_text', 'hide_similar', 'hide_publicbody',
@@ -201,7 +209,7 @@ class SubjectYear(object):
             return ('successful', 'Abgeschlossen')
         else:
             return ('request', 'Jetzt anfragen!')
-        
+
     def display(self):
         if self.exam_request:
             if self.exam_request.url:
@@ -213,8 +221,9 @@ class SubjectYear(object):
                 }
             elif not self.state.is_one_click:
                 state, title = self.get_request_state()
+                url = self.exam_request.foirequest.get_absolute_url()
                 return {
-                    'link': self.exam_request.foirequest.get_absolute_url() + '#last',
+                    'link': url + '#last',
                     'state': state,
                     'title': title
                 }
@@ -225,12 +234,11 @@ class SubjectYear(object):
                     'state': state,
                     'title': title
                 }
-        
+
         if self.can_request:
             if self.is_one_click and self.exam_request.foi:
                 return False
 
-                
 
 def is_request_stale(foirequest):
     last_message = (timezone.now() - foirequest.last_message).days
