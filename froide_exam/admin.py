@@ -10,12 +10,15 @@ class SubjectAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
 
+
 class StateAdmin(admin.ModelAdmin):
     list_display = ('name', 'legal_status',)
     raw_id_fields = ('publicbody',)
 
+
 class CurriculumAdmin(admin.ModelAdmin):
     list_display = ('state_name', 'name', 'start_year', 'end_year',)
+
 
 class ExamRequestAdmin(admin.ModelAdmin):
     date_hierarchy = 'timestamp'
@@ -27,7 +30,7 @@ class ExamRequestAdmin(admin.ModelAdmin):
 
     def name(self, obj):
         return obj.__str__()
-    
+
     def link(self, obj):
         url = None
         title = _('Externer Link')

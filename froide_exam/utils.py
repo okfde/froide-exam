@@ -166,21 +166,21 @@ class SubjectYear(object):
         name = curriculum.name
         subject = ('{name}-Aufgaben im Fach {subject} '
                    'im Jahr {year} in {state}'.format(
-                    name=name,
-                    subject=self.subject,
-                    year=self.year,
-                    state=curriculum.state.name,
-                    ))
+                       name=name,
+                       subject=self.subject,
+                       year=self.year,
+                       state=curriculum.state.name,
+                   ))
         if len(subject) > 250:
             subject = subject[:250] + '...'
         body = (
             'Die Aufgaben, Erwartungshorizonte und Lösungen für die '
             '{name}-Prüfung im Fach {subject} aus dem Jahr {year} in {state}.'
         ).format(
-                subject=self.subject,
-                year=self.year,
-                name=name,
-                state=curriculum.state.name
+            subject=self.subject,
+            year=self.year,
+            name=name,
+            state=curriculum.state.name
         )
         ref = self.get_reference(curriculum)
         redirect_path = '/kampagnen/verschlusssache-pruefung/app/gesendet'

@@ -12,29 +12,34 @@ from .utils import SubjectYear, MAX_YEAR, YEARS
 
 ALL = 'all'
 
+
 def index(request):
     return redirect('/kampagnen/verschlusssache-pruefung/')
+
 
 def sent(request):
     request_id = request.GET.get('request')
     request_url = '/a/' + request_id if request_id else '/account/requests/'
-    share_url = 'https://fragdenstaat.de' + (request_url if request_id else '/vsp')
-    
+    share_url = 'https://fragdenstaat.de' + \
+        (request_url if request_id else '/vsp')
+
     return render(request, 'froide_exam/sent.html', {
         'request_url': request_url,
         'share_url': share_url
     })
 
+
 def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
-    
+
     all_curricula = Curriculum.objects.filter(state=state)
-    types = map(lambda c: { 'name': c.name, 'slug': c.slug }, all_curricula)
+    types = map(lambda c: {'name': c.name, 'slug': c.slug}, all_curricula)
 
     curricula = []
     requested_type = request.GET.get('type')
     if requested_type and requested_type != ALL:
-        curricula = list(filter(lambda c: c.slug == requested_type, all_curricula))
+        curricula = list(
+            filter(lambda c: c.slug == requested_type, all_curricula))
     else:
         curricula = all_curricula
 
@@ -43,7 +48,7 @@ def state_view(request, state_slug=None):
     # so we make an exception for them
     if len(curricula) == 0 and state.needs_request():
         raise Http404
-    
+
     display_years = list(reversed(YEARS))
 
     all_subjects = []
@@ -82,7 +87,7 @@ def state_view(request, state_slug=None):
                 exam_request_map[(er.subject_id, year)].append(er)
 
         cu_map = defaultdict(list)
-        
+
         min_year, max_year = curriculum.get_min_max_year()
         years = list(range(min_year, max_year + 1))
         for year in years:
@@ -95,9 +100,10 @@ def state_view(request, state_slug=None):
                 # [2018, 2017, 2016, ...]
                 index = abs(year - MAX_YEAR)
                 subject_year = subject.years[index]
-                subject_year.exam_requests = exam_request_map[(subject.id, year)]
+                subject_year.exam_requests = exam_request_map[(
+                    subject.id, year)]
                 subject_year.curricula = cu_map[(subject.id, year)]
-            
+
             subject.curriculum = curriculum
             all_subjects.append(subject)
 

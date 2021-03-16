@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from django.urls import reverse
 
 from cms.models.fields import PlaceholderField
 
@@ -24,6 +23,7 @@ KIND_CHOICES = (
     ('hauptschulabschluss', _('Hauptschulabschluss')),
 )
 
+
 class Subject(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -35,10 +35,11 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
 
+
 class State(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
-    
+
     publicbody = models.ForeignKey(PublicBody, on_delete=models.CASCADE)
 
     description = models.TextField(blank=True)
@@ -75,7 +76,7 @@ class State(models.Model):
 class Curriculum(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
-    
+
     state = models.ForeignKey(
         State,
         null=True,
