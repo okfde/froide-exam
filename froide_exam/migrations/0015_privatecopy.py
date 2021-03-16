@@ -16,7 +16,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True,
                                         primary_key=True, serialize=False, verbose_name='ID')),
-                ('token', models.UUIDField(default=uuid.uuid4, editable=False)),
+                ('token', models.UUIDField(
+                    default=uuid.uuid4, editable=False, db_index=True)),
             ],
             options={
                 'verbose_name': 'private copy',
