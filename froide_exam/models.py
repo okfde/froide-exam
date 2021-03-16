@@ -176,7 +176,7 @@ class ExamRequest(models.Model):
 
 
 class PrivateCopy(models.Model):
-    token = models.UUIDField(default=uuid.uuid4)
+    token = models.UUIDField(default=uuid.uuid4, editable=False)
 
     class Meta:
         verbose_name = _('private copy')
