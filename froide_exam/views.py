@@ -158,6 +158,4 @@ def private_copy(request):
             messages.add_message(request, messages.ERROR,
                                  _('Die E-Mail-Adresse ist ungültig.'))
 
-    return render(request, 'froide_exam/request_private_copy.html', {
-        'user': request.user
-    })
+    return render(request, 'froide_exam/request_private_copy.html')
