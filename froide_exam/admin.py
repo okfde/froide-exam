@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from .models import Subject, State, Curriculum, ExamRequest
+from .models import Subject, State, Curriculum, ExamRequest, PrivateCopy
 
 
 class SubjectAdmin(admin.ModelAdmin):
@@ -46,7 +46,12 @@ class ExamRequestAdmin(admin.ModelAdmin):
         return format_html('<a href="{}" target="_blank">{}</a>', url, title)
 
 
+class PrivateCopyAdmin(admin.ModelAdmin):
+    list_display = ('token',)
+
+
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(State, StateAdmin)
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(ExamRequest, ExamRequestAdmin)
+admin.site.register(PrivateCopy, PrivateCopyAdmin)
