@@ -19,12 +19,6 @@ LEGAL_STATUS_CHOICES = (
     ('unrequestable', _('Nicht anfragbar')),
 )
 
-KIND_CHOICES = (
-    ('abitur', _('Abitur')),
-    ('realschulabschluss', _('Realschulabschluss')),
-    ('hauptschulabschluss', _('Hauptschulabschluss')),
-)
-
 
 class Subject(models.Model):
     name = models.CharField(max_length=255)
@@ -112,26 +106,6 @@ class Curriculum(models.Model):
     def is_valid_year(self, year):
         min_year, max_year = self.get_min_max_year()
         return min_year <= year <= max_year
-
-    # legacy fields: technically no longer required
-
-    kind = models.CharField(max_length=100, choices=KIND_CHOICES)
-    jurisdictions = models.ManyToManyField(
-        Jurisdiction,
-        related_name='curriculums',
-        blank=True
-    )
-    publicbody = models.ForeignKey(
-        PublicBody, null=True, blank=True,
-        on_delete=models.SET_NULL
-    )
-    content_placeholder = PlaceholderField('content')
-    description = models.TextField(blank=True)
-    legal_status = models.CharField(
-        max_length=100,
-        choices=LEGAL_STATUS_CHOICES,
-        default='request'
-    )
 
 
 class ExamRequest(models.Model):
