@@ -1,13 +1,17 @@
 from collections import defaultdict
 
+from django import forms
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.http import Http404
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.utils.translation import gettext as _
 
 from froide.foirequest.models import FoiRequest
-from froide.publicbody.models import PublicBody
 
-from .models import State, Curriculum, ExamRequest
+from .models import State, Curriculum, ExamRequest, PrivateCopy
 from .utils import SubjectYear, MAX_YEAR, YEARS
 
 ALL = 'all'
@@ -114,3 +118,51 @@ def state_view(request, state_slug=None):
         'types': types,
         'requested_type': requested_type
     })
+
+
+class PrivateCopyForm(forms.Form):
+    email = forms.EmailField()
+
+
+def private_copy(request):
+    token = request.GET.get('token')
+    if token:
+        try:
+            PrivateCopy.objects.get(token=token)
+        except (PrivateCopy.DoesNotExist, ValidationError):
+            messages.add_message(request, messages.ERROR,
+                                 _('Ungültiges Token.'))
+        else:
+            return render(request, 'froide_exam/view_private_copy.html')
+
+    if request.method == 'POST':
+        form = PrivateCopyForm(data=request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+
+            token = PrivateCopy.objects.create().token
+            url = 'https://fragdenstaat.de/privatkopie?token={}'.format(
+                token)
+
+            message = """Hallo!\r\n\r\n
+Hier kannst du die Prüfungsaufgaben einsehen:\r\n
+{}\r\n\r\n
+Beste Grüße\r\n
+Das Team von FragDenStaat""".format(
+                url)
+
+            send_mail(
+                _('Prüfungsaufgaben'),
+                message,
+                'info@fragdenstaat.de',
+                [email],
+                fail_silently=False
+            )
+
+            messages.add_message(request, messages.SUCCESS,
+                                 _('Wir haben dir eine E-Mail gesendet.'))
+        else:
+            messages.add_message(request, messages.ERROR,
+                                 _('Die E-Mail-Adresse ist ungültig.'))
+
+    return render(request, 'froide_exam/request_private_copy.html')

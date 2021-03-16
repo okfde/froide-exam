@@ -4,6 +4,8 @@ from django.utils import timezone
 
 from cms.models.fields import PlaceholderField
 
+import uuid
+
 from froide.publicbody.models import PublicBody, Jurisdiction
 from froide.foirequest.models import FoiRequest
 
@@ -171,3 +173,11 @@ class ExamRequest(models.Model):
         if self.end_year is not None:
             return list(range(self.start_year.year, self.end_year.year + 1))
         return [self.start_year.year]
+
+
+class PrivateCopy(models.Model):
+    token = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
+
+    class Meta:
+        verbose_name = _('private copy')
+        verbose_name_plural = _('private copies')
