@@ -53,10 +53,10 @@ class SubjectYear(object):
                     if is_request_stale(foirequest):
                         # this one is stale.
                         # allow to re-request by someone else.
-                        if self.user != foirequest.user:
+                        if self.user.id != foirequest.user_id:
                             continue
 
-                    if self.user == foirequest.user:
+                    if self.user.id == foirequest.user_id:
                         by_user = request
 
                     if foirequest.resolution == 'successful':
