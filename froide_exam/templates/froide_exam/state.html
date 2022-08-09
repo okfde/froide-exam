@@ -1,7 +1,5 @@
 {% extends "froide_exam/base.html" %}
 {% load cms_tags %}
-{% load static %}
-{% load sekizai_tags %}
 {% load markup %}
 
 {% block main %}
@@ -17,7 +15,7 @@
   <thead>
     <tr>
       <th>Fach</th>
-      <th>Jahrgänge</th>      
+      <th>Jahrgänge</th>
       <th>
         <form method="GET" id="typeform">
           <select name="type" class="fw-bold" title="Nach Abschluss filtern...">
@@ -71,11 +69,6 @@
 
 {% endif %}
 
-{% addtoblock 'js' %}
-<script src="{% static 'js/exam_curriculum.js' %}" charset="utf-8"></script>
-{% endaddtoblock %}
-{% addtoblock 'css' %}
-<link rel="stylesheet" href="{% static 'css/exam_curriculum.css' %}">
-{% endaddtoblock %}
+{% include "_frontend.html" with entry_point="exam_curriculum.js" %}
 
 {% endblock %}
