@@ -23,7 +23,7 @@
           {% elif state.is_deadend %}
           <small class="text-secondary">
             Kann nicht angefragt werden.
-            <a href="./faq/#ablehnungen" class="badge badge-pill badge-light exam-overview-badge" data-toggle="tooltip"
+            <a href="./faq/#ablehnungen" class="badge rounded-pill text-bg-light exam-overview-badge" data-bs-toggle="tooltip"
               data-placement="top" title="Mehr Informationen">
               <i class="fa fa-question"></i>
             </a>
@@ -31,7 +31,7 @@
           {% else %}
           {% for curriculum in state.curricula %}
           <a href="{{ state.get_absolute_url }}?type={{ curriculum.slug }}"
-            class="badge badge-pill badge-light exam-overview-badge mr-2" data-toggle="tooltip" data-placement="top"
+            class="badge rounded-pill text-bg-light exam-overview-badge me-2" data-bs-toggle="tooltip" data-placement="top"
             title="Schon {{ curriculum.request_count }} Anfragen">
             <i class="fa fa-chevron-right"></i> {{ curriculum.name }}
           </a>
@@ -49,10 +49,10 @@
     <div>
       <i class="fa fa-circle text-success"></i> Aufgaben schon öffentlich
     </div>
-    <div class="ml-md-3">
+    <div class="ms-md-3">
       <i class="fa fa-circle text-primary"></i> Aufgaben können angefragt werden
     </div>
-    <div class="ml-md-3">
+    <div class="ms-md-3">
       <i class="fa fa-circle text-secondary"></i> Aufgaben können nicht angefragt werden
     </div>
   </div>
