@@ -20,7 +20,7 @@
       <th>Jahrgänge</th>      
       <th>
         <form method="GET" id="typeform">
-          <select name="type" class="font-weight-bold" title="Nach Abschluss filtern...">
+          <select name="type" class="fw-bold" title="Nach Abschluss filtern...">
             <option value="all">Alle Abschlüsse...</option>
             {% for type in types %}
             <option value="{{ type.slug }}" {% if type.slug == requested_type %}selected{% endif %}>
@@ -53,13 +53,13 @@
   <div>
     <i class="fa fa-circle text-primary"></i> Jetzt anfragen!
   </div>
-  <div class="ml-md-3">
+  <div class="ms-md-3">
     <i class="fa fa-circle text-success"></i> Anfrage erfolgreich/schon öffentlich
   </div>
-  <div class="ml-md-3">
+  <div class="ms-md-3">
     <i class="fa fa-circle text-warning"></i> Anfrage läuft
   </div>
-  <div class="ml-md-3">
+  <div class="ms-md-3">
     <i class="fa fa-times text-danger"></i> Anfrage abgelehnt
   </div>
 </div>

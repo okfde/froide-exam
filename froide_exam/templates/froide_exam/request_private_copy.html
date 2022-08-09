@@ -11,11 +11,9 @@
         {% csrf_token %}
         <div class="input-group">
           <input placeholder="E-Mail" class="form-control" type="email" name="email" required value="{{ request.user.email }}">
-          <div class="input-group-append">
-            <button type="submit" class="btn btn-primary">
-              Privatkopie erhalten!
-            </button>
-          </div>
+          <button type="submit" class="btn btn-primary">
+            Privatkopie erhalten!
+          </button>
         </div>
       </form>
       <p class="small mt-3">
