@@ -1,7 +1,7 @@
 {% if link %}
 <a href="{{ link }}"
-  class="badge badge-pill badge-light curriculum-badge {% if status %}curriculum-badge-{{ status }}{% else %}{% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful{% endif %}{% endif %}"
-  data-toggle="tooltip" data-placement="top"
+  class="badge rounded-pill text-bg-light curriculum-badge {% if status %}curriculum-badge-{{ status }}{% else %}{% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful{% endif %}{% endif %}"
+  data-bs-toggle="tooltip" data-placement="top"
   title="{% if title %}{{ title }}{% else %}{% if subject_year.request_pending %}Schon angefragt{% elif subject_year.request_failed %}Fehlgeschlagen{% else %}Abgeschlossen{% endif %}{% endif %}">
   
   {% if icon %}
@@ -18,7 +18,7 @@
   {{ subject_year.year }}
 </a>
 {% else %}
-<span class="badge badge-pill badge-light curriculum-badge curriculum-badge-{{ status }}" data-toggle="tooltip" data-placement="top"
+<span class="badge rounded-pill text-bg-light curriculum-badge curriculum-badge-{{ status }}" data-bs-toggle="tooltip" data-placement="top"
   title="{{ title }}">
   {% if icon %}
     <i class="fa fa-{{ icon }}"></i>

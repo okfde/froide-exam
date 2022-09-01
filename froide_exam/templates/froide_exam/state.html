@@ -1,7 +1,6 @@
-{% extends "froide_exam/base.html" %}
+{% extends "./base.html" %}
+
 {% load cms_tags %}
-{% load static %}
-{% load sekizai_tags %}
 {% load markup %}
 
 {% block main %}
@@ -53,13 +52,13 @@
   <div>
     <i class="fa fa-circle text-primary"></i> Jetzt anfragen!
   </div>
-  <div class="ml-md-3">
+  <div class="ms-md-3">
     <i class="fa fa-circle text-success"></i> Anfrage erfolgreich/schon öffentlich
   </div>
-  <div class="ml-md-3">
+  <div class="ms-md-3">
     <i class="fa fa-circle text-warning"></i> Anfrage läuft
   </div>
-  <div class="ml-md-3">
+  <div class="ms-md-3">
     <i class="fa fa-times text-danger"></i> Anfrage abgelehnt
   </div>
 </div>
@@ -70,12 +69,5 @@
 </p>
 
 {% endif %}
-
-{% addtoblock 'js' %}
-<script src="{% static 'js/exam_curriculum.js' %}" charset="utf-8"></script>
-{% endaddtoblock %}
-{% addtoblock 'css' %}
-<link rel="stylesheet" href="{% static 'css/exam_curriculum.css' %}">
-{% endaddtoblock %}
 
 {% endblock %}

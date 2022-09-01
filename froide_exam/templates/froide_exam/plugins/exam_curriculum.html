@@ -1,5 +1,5 @@
 {% load cms_tags %}
-{% load static %}
+{% load frontendbuild %}
 {% load sekizai_tags %}
 
 {% block main %}
@@ -23,7 +23,7 @@
           {% elif state.is_deadend %}
           <small class="text-secondary">
             Kann nicht angefragt werden.
-            <a href="./faq/#ablehnungen" class="badge badge-pill badge-light exam-overview-badge" data-toggle="tooltip"
+            <a href="./faq/#ablehnungen" class="badge rounded-pill text-bg-light exam-overview-badge" data-bs-toggle="tooltip"
               data-placement="top" title="Mehr Informationen">
               <i class="fa fa-question"></i>
             </a>
@@ -31,7 +31,7 @@
           {% else %}
           {% for curriculum in state.curricula %}
           <a href="{{ state.get_absolute_url }}?type={{ curriculum.slug }}"
-            class="badge badge-pill badge-light exam-overview-badge mr-2" data-toggle="tooltip" data-placement="top"
+            class="badge rounded-pill text-bg-light exam-overview-badge mr-2" data-bs-toggle="tooltip" data-placement="top"
             title="Schon {{ curriculum.request_count }} Anfragen">
             <i class="fa fa-chevron-right"></i> {{ curriculum.name }}
           </a>
@@ -58,11 +58,8 @@
   </div>
 </div>
 
-{% addtoblock 'js' %}
-<script src="{% static 'js/exam_curriculum.js' %}" charset="utf-8"></script>
-{% endaddtoblock %}
-{% addtoblock 'css' %}
-<link rel="stylesheet" href="{% static 'css/exam_curriculum.css' %}">
+{% addtoblock "js" %}
+{% include "_frontend.html" with entry_point="exam_curriculum.js" %}
 {% endaddtoblock %}
 
 {% endblock %}
