@@ -1,12 +1,12 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import (index, state_view, sent, private_copy)
 
 urlpatterns = [
-    url(r'^$', index, name='exam-index'),
-    url(r'^gesendet/$', sent, name='exam-sent'),
-    url(r'^privatkopie/$', private_copy,
+    path('', index, name='exam-index'),
+    path('gesendet/', sent, name='exam-sent'),
+    path('privatkopie/', private_copy,
         name='exam-private-copy'),
-    url(r'^(?P<state_slug>[\w-]+)/$', state_view,
+    path('<slug:state_slug>/', state_view,
         name='exam-state'),
 ]
