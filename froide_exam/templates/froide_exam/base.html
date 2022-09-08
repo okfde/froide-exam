@@ -1,11 +1,18 @@
 {% extends CMS_TEMPLATE %}
 
+{% load frontendbuild %}
 {% load cms_tags %}
 
 {% block body %}
-  {% static_placeholder 'froide_exam_header' %}
-  <div class="container mt-3 mb-5">
-    {% block main %}{% endblock %}
-  </div>
-  {% static_placeholder 'froide_exam_footer' %}
+
+{% static_placeholder 'froide_exam_header' %}
+
+<div class="container mt-3 mb-5">
+  {% block main %}{% endblock %}
+</div>
+
+{% static_placeholder 'froide_exam_footer' %}
+
+{% include "_frontend.html" with entry_point="exam_curriculum.js" %}
+
 {% endblock %}

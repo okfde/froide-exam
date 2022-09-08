@@ -1,4 +1,5 @@
 {% load cms_tags %}
+{% load frontendbuild %}
 
 {% block main %}
 
@@ -29,9 +30,9 @@
           {% else %}
           {% for curriculum in state.curricula %}
           <a href="{{ state.get_absolute_url }}?type={{ curriculum.slug }}"
-            class="badge rounded-pill text-bg-light exam-overview-badge me-2" data-bs-toggle="tooltip" data-placement="top"
+            class="badge rounded-pill text-bg-light exam-overview-badge me-2 fw-normal" data-bs-toggle="tooltip" data-placement="top"
             title="Schon {{ curriculum.request_count }} Anfragen">
-            <i class="fa fa-chevron-right"></i> {{ curriculum.name }}
+            {{ curriculum.name }}
           </a>
           {% endfor %}
           {% endif %}
@@ -51,7 +52,7 @@
       <i class="fa fa-circle text-primary"></i> Aufgaben können angefragt werden
     </div>
     <div class="ms-md-3">
-      <i class="fa fa-circle text-secondary"></i> Aufgaben können nicht angefragt werden
+      <i class="fa fa-circle text-gray-500"></i> Aufgaben können nicht angefragt werden
     </div>
   </div>
 </div>

@@ -1,4 +1,5 @@
 {% extends "froide_exam/base.html" %}
+
 {% load cms_tags %}
 {% load markup %}
 
@@ -14,7 +15,10 @@
 <table class="table mt-4 exam-state-table">
   <thead>
     <tr>
-      <th>Fach</th>
+      <th>
+        <span class="d-none d-md-inline">Fach</span>
+        <span class="d-md-none">Filter:</span>
+      </th>
       <th>Jahrgänge</th>
       <th>
         <form method="GET" id="typeform">
@@ -37,7 +41,7 @@
         {{ subject.name }} <span class="curriculum-name">({{ subject.curriculum.name }})</span>
       </td>
       <td class="">
-        <div class="d-flex">
+        <div class="d-flex flex-wrap">
           {% include "./state_years.html" %}
         </div>
       </td>
@@ -68,7 +72,5 @@
 </p>
 
 {% endif %}
-
-{% include "_frontend.html" with entry_point="exam_curriculum.js" %}
 
 {% endblock %}
