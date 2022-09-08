@@ -115,6 +115,15 @@ class SubjectYear(object):
         fr = self.get_same_request() or self.exam_request.foirequest
         return "successful" not in fr.resolution
 
+    @property
+    def request_successful(self):
+        if not self.exam_request:
+            return False
+        if not self.exam_request.foirequest:
+            return
+        fr = self.get_same_request() or self.exam_request.foirequest
+        return "successful" in fr.resolution
+
     def can_request(self):
         if not self.state and not self.state.needs_request():
             return False

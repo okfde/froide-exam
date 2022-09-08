@@ -1,15 +1,15 @@
 {% if link %}
 <a href="{{ link }}"
-  class="badge rounded-pill text-bg-light curriculum-badge {% if status %}curriculum-badge-{{ status }}{% else %}{% if subject_year.request_pending %}curriculum-badge-pending{% elif subject_year.request_failed %}curriculum-badge-refused{% else %}curriculum-badge-successful{% endif %}{% endif %}"
+  class="badge rounded-pill me-2 mb-2 mb-md-0 {% if subject_year.request_successful %}text-bg-success{% elif status %}text-bg-{{ status }}{% else %}text-bg-light{% endif %}"
   data-bs-toggle="tooltip" data-placement="top"
   title="{% if title %}{{ title }}{% else %}{% if subject_year.request_pending %}Schon angefragt{% elif subject_year.request_failed %}Fehlgeschlagen{% else %}Abgeschlossen{% endif %}{% endif %}">
   {% if icon %}
     <i class="fa fa-{{ icon }}"></i>
   {% else %}
     {% if subject_year.request_pending %}
-      <i class="fa fa-circle"></i>
+      <i class="fa fa-circle text-warning"></i>
     {% elif subject_year.request_failed %}
-      <i class="fa fa-times"></i>
+      <i class="fa fa-times text-danger"></i>
     {% else %}
       <i class="fa fa-check"></i>
     {% endif %}
@@ -17,8 +17,7 @@
   {{ subject_year.year }}
 </a>
 {% else %}
-<span class="badge rounded-pill text-bg-light curriculum-badge curriculum-badge-{{ status }}" data-bs-toggle="tooltip" data-placement="top"
-  title="{{ title }}">
+<span class="badge rounded-pill text-bg-{{ status }} me-2 mb-2 mb-md-0" data-bs-toggle="tooltip" data-placement="top" title="{{ title }}">
   {% if icon %}
     <i class="fa fa-{{ icon }}"></i>
   {% endif %}

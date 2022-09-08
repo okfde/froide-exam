@@ -1,58 +1,13 @@
 
 @import '~froide/frontend/styles/variables';
 
-$normal: $blue-500;
-$pending: $yellow;
-$successful: $green;
-$refused: $red;
-
-.badge.curriculum-badge {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  margin: 0.25rem;
-
-  .fa {
-    margin-right: 0.25rem;
-  }
-
-  .fa.fa-circle {
-    font-size: 0.5rem;
-  }
-}
-
-.badge.curriculum-badge-successful,
-.badge.curriculum-badge-successful:hover,
-.badge.curriculum-badge-successful:focus {
-  color: #fff;
-  background-color: $successful;
-}
-
-.curriculum-icon-download {
-  color: $normal;
-}
-
-.curriculum-badge-normal i.fa {
-  color: $normal;
-}
-
-.curriculum-badge-pending i.fa {
-  color: $pending;
-}
-
-.curriculum-badge-refused i.fa {
-  color: $refused;
-}
-
-
 table.exam-state-table {
   .curriculum-name {
     display: none;
     color: $secondary;
   }
 
-  @include media-breakpoint-only(xs) {
+  @include media-breakpoint-down(sm) {
     .curriculum-name {
       display: inline;
     }  
@@ -83,19 +38,12 @@ table.exam-state-table {
       tr {
         display: flex;
         flex-direction: column;
-      }
-
-      td {
-        padding: 1.25rem 0;
-      }
-
-      td:nth-child(1) {
         padding-bottom: 0.5rem;
       }
 
-      td:nth-child(2) {
-        border-top: none;
-        padding-top: 0;
+      td {
+        padding: 0.25rem 0;
+        border-bottom: none;
       }
 
       td:nth-child(3) {
@@ -103,28 +51,20 @@ table.exam-state-table {
       }
     }
   }
-}
 
-.exam-overview-badge.badge {
-  display: inline-flex;
-  align-items: center;
-  font-weight: normal;
-
-  .fa.fa-chevron-right {
-    font-size: 0.5rem;
-    margin: auto;
-    margin-right: 0.25rem;
+  .fa.fa-circle {
+    color: $blue-500;
   }
 }
 
-.exam-overview-requestable.card {
-  border-left: 2px $normal solid;
+.card.exam-overview-requestable {
+  border-left: 2px $blue-500 solid;
 }
 
-.exam-overview-deadend.card {
-  border-left: 2px #5C748D solid;
+.card.exam-overview-deadend {
+  border-left: 2px $gray-500 solid;
 }
 
-.exam-overview-public.card {
-  border-left: 2px $successful solid;
+.card.exam-overview-public {
+  border-left: 2px $success solid;
 }
