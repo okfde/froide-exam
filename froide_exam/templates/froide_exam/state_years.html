@@ -35,10 +35,10 @@
   {% if subject_year.can_request %}
     {% if subject_year.is_one_click and subject_year.exam_request.foirequest %}
       {% with subject_year.exam_request.foirequest.get_absolute_url|add:"#make-same-request" as url %}
-        {% include "./state_year_tag.html" with icon="circle" link=url title="Jetzt auch anfragen!" %}
+        {% include "./state_year_tag.html" with icon="circle" link=url title="Jetzt auch anfragen!" status="light" %}
       {% endwith %}
     {% elif not subject_year.exam_request %}
-      {% include "./state_year_tag.html" with icon="circle" link=subject_year.make_request_url title="Jetzt anfragen!" %}
+      {% include "./state_year_tag.html" with icon="circle" link=subject_year.make_request_url title="Jetzt anfragen!" status="light" %}
     {% endif %}
   {% endif %}
 {% endfor %}

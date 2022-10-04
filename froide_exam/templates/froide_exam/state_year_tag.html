@@ -1,6 +1,6 @@
 {% if link %}
 <a href="{{ link }}"
-  class="badge rounded-pill me-2 mb-2 mb-md-0 {% if subject_year.request_successful %}text-bg-success{% elif status %}text-bg-{{ status }}{% else %}text-bg-light{% endif %}"
+  class="badge rounded-pill me-2 mb-2 mb-md-0 {% if status %}text-bg-{{ status }}{% elif subject_year.request_successful %}text-bg-success{% else %}text-bg-light{% endif %}"
   data-bs-toggle="tooltip" data-placement="top"
   title="{% if title %}{{ title }}{% else %}{% if subject_year.request_pending %}Schon angefragt{% elif subject_year.request_failed %}Fehlgeschlagen{% else %}Abgeschlossen{% endif %}{% endif %}">
   {% if icon %}
