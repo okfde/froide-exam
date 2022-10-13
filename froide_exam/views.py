@@ -14,36 +14,35 @@ from froide.foirequest.models import FoiRequest
 from .models import State, Curriculum, ExamRequest, PrivateCopy
 from .utils import SubjectYear, MAX_YEAR, YEARS
 
-ALL = 'all'
+ALL = "all"
 
 
 def index(request):
-    return redirect('/kampagnen/verschlusssache-pruefung/')
+    return redirect("/kampagnen/verschlusssache-pruefung/")
 
 
 def sent(request):
-    request_id = request.GET.get('request')
-    request_url = '/a/' + request_id if request_id else '/account/requests/'
-    share_url = 'https://fragdenstaat.de' + \
-        (request_url if request_id else '/vsp')
+    request_id = request.GET.get("request")
+    request_url = "/a/" + request_id if request_id else "/account/requests/"
+    share_url = "https://fragdenstaat.de" + (request_url if request_id else "/vsp")
 
-    return render(request, 'froide_exam/sent.html', {
-        'request_url': request_url,
-        'share_url': share_url
-    })
+    return render(
+        request,
+        "froide_exam/sent.html",
+        {"request_url": request_url, "share_url": share_url},
+    )
 
 
 def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
 
     all_curricula = Curriculum.objects.filter(state=state)
-    types = map(lambda c: {'name': c.name, 'slug': c.slug}, all_curricula)
+    types = map(lambda c: {"name": c.name, "slug": c.slug}, all_curricula)
 
     curricula = []
-    requested_type = request.GET.get('type')
+    requested_type = request.GET.get("type")
     if requested_type and requested_type != ALL:
-        curricula = list(
-            filter(lambda c: c.slug == requested_type, all_curricula))
+        curricula = list(filter(lambda c: c.slug == requested_type, all_curricula))
     else:
         curricula = all_curricula
 
@@ -61,27 +60,27 @@ def state_view(request, state_slug=None):
 
         exam_requests = ExamRequest.objects.filter(
             curriculum=curriculum
-        ).select_related('foirequest')
+        ).select_related("foirequest")
         exam_request_map = defaultdict(list)
 
         same_requests = {}
         if state.is_oneclick() and request.user.is_authenticated:
-            foirequest_ids = {
-                er.foirequest_id for er in exam_requests
-            }
+            foirequest_ids = {er.foirequest_id for er in exam_requests}
             same_requests = {
-                fr.same_as_id or fr.id: fr for fr in FoiRequest.objects.filter(
-                    user=request.user).filter(
-                    Q(same_as_id__in=foirequest_ids) |
-                    Q(id__in=foirequest_ids)
+                fr.same_as_id or fr.id: fr
+                for fr in FoiRequest.objects.filter(user=request.user).filter(
+                    Q(same_as_id__in=foirequest_ids) | Q(id__in=foirequest_ids)
                 )
             }
 
         for s in subjects:
             s.years = [
                 SubjectYear(
-                    user=request.user, subject=s, year=year,
-                    same_requests=same_requests, state=state
+                    user=request.user,
+                    subject=s,
+                    year=year,
+                    same_requests=same_requests,
+                    state=state,
                 )
                 for year in display_years
             ]
@@ -104,20 +103,23 @@ def state_view(request, state_slug=None):
                 # [2018, 2017, 2016, ...]
                 index = abs(year - MAX_YEAR)
                 subject_year = subject.years[index]
-                subject_year.exam_requests = exam_request_map[(
-                    subject.id, year)]
+                subject_year.exam_requests = exam_request_map[(subject.id, year)]
                 subject_year.curricula = cu_map[(subject.id, year)]
 
             subject.curriculum = curriculum
             all_subjects.append(subject)
 
-    return render(request, 'froide_exam/state.html', {
-        'years': display_years,
-        'subjects': all_subjects,
-        'state': state,
-        'types': types,
-        'requested_type': requested_type
-    })
+    return render(
+        request,
+        "froide_exam/state.html",
+        {
+            "years": display_years,
+            "subjects": all_subjects,
+            "state": state,
+            "types": types,
+            "requested_type": requested_type,
+        },
+    )
 
 
 class PrivateCopyForm(forms.Form):
@@ -125,44 +127,45 @@ class PrivateCopyForm(forms.Form):
 
 
 def private_copy(request):
-    token = request.GET.get('token')
+    token = request.GET.get("token")
     if token:
         try:
             PrivateCopy.objects.get(token=token)
         except (PrivateCopy.DoesNotExist, ValidationError):
-            messages.add_message(request, messages.ERROR,
-                                 _('Ungültiges Token.'))
+            messages.add_message(request, messages.ERROR, _("Ungültiges Token."))
         else:
-            return render(request, 'froide_exam/view_private_copy.html')
+            return render(request, "froide_exam/view_private_copy.html")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PrivateCopyForm(data=request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
+            email = form.cleaned_data["email"]
 
             token = PrivateCopy.objects.create().token
-            url = 'https://fragdenstaat.de/privatkopie?token={}'.format(
-                token)
+            url = "https://fragdenstaat.de/privatkopie?token={}".format(token)
 
             message = """Hallo!\r\n\r\n
 Hier kannst du die Prüfungsaufgaben einsehen:\r\n
 {}\r\n\r\n
 Beste Grüße\r\n
 Das Team von FragDenStaat""".format(
-                url)
-
-            send_mail(
-                _('Prüfungsaufgaben'),
-                message,
-                'info@fragdenstaat.de',
-                [email],
-                fail_silently=False
+                url
             )
 
-            messages.add_message(request, messages.SUCCESS,
-                                 _('Wir haben dir eine E-Mail gesendet.'))
-        else:
-            messages.add_message(request, messages.ERROR,
-                                 _('Die E-Mail-Adresse ist ungültig.'))
+            send_mail(
+                _("Prüfungsaufgaben"),
+                message,
+                "info@fragdenstaat.de",
+                [email],
+                fail_silently=False,
+            )
 
-    return render(request, 'froide_exam/request_private_copy.html')
+            messages.add_message(
+                request, messages.SUCCESS, _("Wir haben dir eine E-Mail gesendet.")
+            )
+        else:
+            messages.add_message(
+                request, messages.ERROR, _("Die E-Mail-Adresse ist ungültig.")
+            )
+
+    return render(request, "froide_exam/request_private_copy.html")
