@@ -13,10 +13,10 @@ from .utils import MIN_YEAR, MAX_YEAR
 
 
 LEGAL_STATUS_CHOICES = (
-    ('request', _('Anfragbar')),
-    ('request_not_publish', _('Anfragbar (nicht veröffentlichbar)')),
-    ('public', _('Schon öffentlich')),
-    ('unrequestable', _('Nicht anfragbar')),
+    ("request", _("Anfragbar")),
+    ("request_not_publish", _("Anfragbar (nicht veröffentlichbar)")),
+    ("public", _("Schon öffentlich")),
+    ("unrequestable", _("Nicht anfragbar")),
 )
 
 
@@ -25,8 +25,8 @@ class Subject(models.Model):
     slug = models.SlugField()
 
     class Meta:
-        verbose_name = ('exam subject')
-        verbose_name_plural = _('exam subjects')
+        verbose_name = "exam subject"
+        verbose_name_plural = _("exam subjects")
 
     def __str__(self):
         return self.name
@@ -41,43 +41,37 @@ class State(models.Model):
     description = models.TextField(blank=True)
 
     legal_status = models.CharField(
-        max_length=100,
-        choices=LEGAL_STATUS_CHOICES,
-        default='request'
+        max_length=100, choices=LEGAL_STATUS_CHOICES, default="request"
     )
 
     class Meta:
-        verbose_name = ('state')
-        verbose_name_plural = _('states')
-        ordering = ('name',)
+        verbose_name = "state"
+        verbose_name_plural = _("states")
+        ordering = ("name",)
 
     def __str__(self):
         return self.name
 
     def needs_request(self):
-        return self.legal_status.startswith('request')
+        return self.legal_status.startswith("request")
 
     def is_deadend(self):
-        return self.legal_status == 'unrequestable'
+        return self.legal_status == "unrequestable"
 
     def is_oneclick(self):
-        return self.legal_status == 'request_not_publish'
+        return self.legal_status == "request_not_publish"
 
     def get_absolute_url(self):
         if self.slug:
-            return('app/{}'.format(self.slug))
-        return ''
+            return "app/{}".format(self.slug)
+        return ""
 
 
 class Curriculum(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
 
-    state = models.ForeignKey(
-        State,
-        null=True,
-        on_delete=models.SET_NULL
-    )
+    state = models.ForeignKey(State, null=True, on_delete=models.SET_NULL)
 
     start_year = models.DateField(null=True, blank=True)
     end_year = models.DateField(null=True, blank=True)
@@ -85,13 +79,13 @@ class Curriculum(models.Model):
     subjects = models.ManyToManyField(Subject)
 
     class Meta:
-        verbose_name = ('curriculum')
-        verbose_name_plural = _('curricula')
-        ordering = ('name',)
+        verbose_name = "curriculum"
+        verbose_name_plural = _("curricula")
+        ordering = ("name",)
 
     def __str__(self):
         if self.state:
-            return '{state} ({name})'.format(state=self.state.name, name=self.name)
+            return "{state} ({name})".format(state=self.state.name, name=self.name)
 
         return self.name
 
@@ -110,37 +104,28 @@ class Curriculum(models.Model):
 
 class ExamRequest(models.Model):
     subject = models.ForeignKey(
-        Subject, null=True, blank=True,
-        on_delete=models.SET_NULL
+        Subject, null=True, blank=True, on_delete=models.SET_NULL
     )
     start_year = models.DateField()
     end_year = models.DateField(null=True, blank=True)
     curriculum = models.ForeignKey(
-        Curriculum, null=True, blank=True,
-        on_delete=models.SET_NULL
+        Curriculum, null=True, blank=True, on_delete=models.SET_NULL
     )
 
     url = models.URLField(blank=True)
-    timestamp = models.DateTimeField(
-        blank=True, null=True,
-        default=timezone.now
-    )
+    timestamp = models.DateTimeField(blank=True, null=True, default=timezone.now)
     foirequest = models.ForeignKey(
-        FoiRequest,
-        null=True, blank=True,
-        on_delete=models.CASCADE
+        FoiRequest, null=True, blank=True, on_delete=models.CASCADE
     )
 
     class Meta:
-        verbose_name = _('exam request')
-        verbose_name_plural = _('exam requests')
-        ordering = ('-timestamp',)
+        verbose_name = _("exam request")
+        verbose_name_plural = _("exam requests")
+        ordering = ("-timestamp",)
 
     def __str__(self):
-        return '{subject} {year} {curriculum}'.format(
-            subject=self.subject,
-            year=self.get_years(),
-            curriculum=self.curriculum
+        return "{subject} {year} {curriculum}".format(
+            subject=self.subject, year=self.get_years(), curriculum=self.curriculum
         )
 
     def get_years(self):
@@ -153,5 +138,5 @@ class PrivateCopy(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
 
     class Meta:
-        verbose_name = _('private copy')
-        verbose_name_plural = _('private copies')
+        verbose_name = _("private copy")
+        verbose_name_plural = _("private copies")

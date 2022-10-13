@@ -6,34 +6,44 @@ from .models import Subject, State, Curriculum, ExamRequest, PrivateCopy
 
 
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-    prepopulated_fields = {'slug': ('name',)}
+    list_display = ("name",)
+    search_fields = ("name",)
+    prepopulated_fields = {"slug": ("name",)}
 
 
 class StateAdmin(admin.ModelAdmin):
-    list_display = ('name', 'legal_status',)
-    raw_id_fields = ('publicbody',)
+    list_display = (
+        "name",
+        "legal_status",
+    )
+    raw_id_fields = ("publicbody",)
 
 
 class CurriculumAdmin(admin.ModelAdmin):
-    list_display = ('state_name', 'name', 'start_year', 'end_year',)
+    list_display = (
+        "state_name",
+        "name",
+        "start_year",
+        "end_year",
+    )
 
 
 class ExamRequestAdmin(admin.ModelAdmin):
-    date_hierarchy = 'timestamp'
-    list_filter = (
-        'foirequest__status', 'foirequest__resolution',
-        'curriculum')
-    list_display = ('name', 'timestamp', 'link',)
-    raw_id_fields = ('foirequest',)
+    date_hierarchy = "timestamp"
+    list_filter = ("foirequest__status", "foirequest__resolution", "curriculum")
+    list_display = (
+        "name",
+        "timestamp",
+        "link",
+    )
+    raw_id_fields = ("foirequest",)
 
     def name(self, obj):
         return obj.__str__()
 
     def link(self, obj):
         url = None
-        title = _('Externer Link')
+        title = _("Externer Link")
 
         if obj.url:
             url = obj.url
@@ -47,7 +57,7 @@ class ExamRequestAdmin(admin.ModelAdmin):
 
 
 class PrivateCopyAdmin(admin.ModelAdmin):
-    list_display = ('token',)
+    list_display = ("token",)
 
 
 admin.site.register(Subject, SubjectAdmin)
