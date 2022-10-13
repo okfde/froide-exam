@@ -3,7 +3,7 @@ import '../styles/curriculum.scss'
 document.addEventListener('DOMContentLoaded', () => {
   const select = document.querySelector('#typeform select')
 
-  select && select.addEventListener('change', () => {
+  select?.addEventListener('change', () => {
     document.querySelector('#typeform').submit()
   })
 })
