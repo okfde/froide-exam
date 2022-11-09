@@ -68,8 +68,8 @@ def connect_request_object(sender, **kwargs):
             curriculum=curriculum,
             subject=subject,
             start_year=year_date,
-            timestamp=sender.first_message,
-            foirequest=sender
+            timestamp=sender.created_at,
+            foirequest=sender,
         )
 
     if curriculum.state.is_oneclick():
