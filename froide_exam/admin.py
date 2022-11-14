@@ -1,8 +1,10 @@
+from datetime import date
+
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from .models import Subject, State, Curriculum, ExamRequest, PrivateCopy
+from .models import Curriculum, ExamRequest, PrivateCopy, State, Subject
 
 
 class SubjectAdmin(admin.ModelAdmin):
@@ -37,6 +39,7 @@ class ExamRequestAdmin(admin.ModelAdmin):
         "link",
     )
     raw_id_fields = ("foirequest",)
+    actions = ("set_end_year_to_current",)
 
     def name(self, obj):
         return obj.__str__()
@@ -54,6 +57,14 @@ class ExamRequestAdmin(admin.ModelAdmin):
             return None
 
         return format_html('<a href="{}" target="_blank">{}</a>', url, title)
+
+    def set_end_year_to_current(self, request, queryset):
+        today = date.today()
+        end_year = date(today.year, 12, 31)
+
+        queryset.update(end_year=end_year)
+
+    set_end_year_to_current.short_description = _("Set end year to current year")
 
 
 class PrivateCopyAdmin(admin.ModelAdmin):
