@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class FroideExamConfig(AppConfig):
-    name = 'froide_exam'
+    name = "froide_exam"
     verbose_name = _("Froide Exam App")
 
     def ready(self):

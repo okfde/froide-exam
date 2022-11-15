@@ -24,17 +24,17 @@ class ExamCurriculumPlugin(CMSPluginBase):
         for state in states:
             curricula = Curriculum.objects.filter(state=state).annotate(
                 request_count=models.Count(
-                    'examrequest',
-                    filter=models.Q(examrequest__foirequest__isnull=False)
+                    "examrequest",
+                    filter=models.Q(examrequest__foirequest__isnull=False),
                 )
             )
             state.curricula = curricula
 
         states = sorted(
             states,
-            key=lambda s: s.needs_request() or s.legal_status == 'public',
-            reverse=True
+            key=lambda s: s.needs_request() or s.legal_status == "public",
+            reverse=True,
         )
 
-        context.update({ 'states': states })
+        context.update({"states": states})
         return context

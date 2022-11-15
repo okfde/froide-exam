@@ -9,7 +9,7 @@ from .utils import REFERENCE_NAMESPACE, is_request_stale
 
 def from_reference(reference):
     try:
-        namespace, curriculum_id, subject_id, year = reference.split(':', 3)
+        namespace, curriculum_id, subject_id, year = reference.split(":", 3)
     except ValueError:
         return
 
@@ -34,7 +34,7 @@ def from_reference(reference):
 
 
 def connect_request_object(sender, **kwargs):
-    reference = kwargs.get('reference')
+    reference = kwargs.get("reference")
     if not reference:
         return
     if not reference.startswith(REFERENCE_NAMESPACE):
@@ -45,17 +45,15 @@ def connect_request_object(sender, **kwargs):
         return
     curriculum, subject, year = result
 
-    sender.user.tags.add('exam')
+    sender.user.tags.add("exam")
     if not sender.user.is_active:
         # First-time requester
-        sender.user.tags.add('exam-first')
+        sender.user.tags.add("exam-first")
 
     year_date = timezone.make_aware(datetime(year, 1, 1))
 
     er = ExamRequest.objects.filter(
-        curriculum=curriculum,
-        subject=subject,
-        start_year=year_date
+        curriculum=curriculum, subject=subject, start_year=year_date
     ).first()
 
     if not er or is_request_stale(er.foirequest):
@@ -89,8 +87,6 @@ def hide_attachments(sender=None, message=None, **kwargs):
     if not curriculum.state.is_oneclick():
         return
 
-    FoiAttachment.objects.filter(
-        belongs_to=message, filetype__contains='pdf'
-    ).update(
+    FoiAttachment.objects.filter(belongs_to=message, filetype__contains="pdf").update(
         can_approve=False
     )
