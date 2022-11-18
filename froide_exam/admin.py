@@ -59,9 +59,7 @@ class ExamRequestAdmin(admin.ModelAdmin):
         return format_html('<a href="{}" target="_blank">{}</a>', url, title)
 
     def set_end_year_to_current(self, request, queryset):
-        today = date.today()
-        end_year = date(today.year, 12, 31)
-
+        end_year = date.today().replace(month=12, day=31)
         queryset.update(end_year=end_year)
 
     set_end_year_to_current.short_description = _("Set end year to current year")
