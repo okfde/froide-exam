@@ -2,17 +2,25 @@
 
 {% load frontendbuild %}
 {% load cms_tags %}
+{% load menu_tags %}
 
-{% block body %}
+{% block app_body %}
+<nav class="bg-gray-100" aria-label="breadcrumb">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% page_url 'verschlusssache-pruefung' %}">Verschlusssache Prüfung</a></li>
+      {% block exam_breadcrumbs %}{% endblock %}
+    </ol>
+  </div>
+</nav>
 
 {% static_placeholder 'froide_exam_header' %}
 
 <div class="container mt-3 mb-5">
-  {% block main %}{% endblock %}
+  {% block froide_exam %}{% endblock %}
 </div>
 
 {% static_placeholder 'froide_exam_footer' %}
+{% endblock %}
 
 {% include "_frontend.html" with entry_point="exam_curriculum.js" %}
-
-{% endblock %}
