@@ -1,6 +1,12 @@
 {% extends "froide_exam/base.html" %}
 {% load cms_tags %}
 
+{% block exam_breadcrumbs %}
+<li class="breadcrumb-item active">
+  Privatkopie anfordern
+</li>
+{% endblock %}
+
 {% block main %}
 {% static_placeholder 'froide_exam_private_copy' %}
 
