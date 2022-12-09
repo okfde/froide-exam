@@ -29,7 +29,7 @@
       <th>Jahrgänge</th>
       <th>
         <form method="GET" id="typeform">
-          <select name="type" class="fw-bold" title="Nach Abschluss filtern...">
+          <select name="type" class="form-select form-select-sm" title="Nach Abschluss filtern...">
             <option value="all">Alle Abschlüsse...</option>
             {% for type in types %}
             <option value="{{ type.slug }}" {% if type.slug == requested_type %}selected{% endif %}>
