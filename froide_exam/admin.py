@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from froide.foirequest.models import FoiRequest
+
 from .models import Curriculum, ExamRequest, PrivateCopy, State, Subject
 
 
@@ -32,14 +34,19 @@ class CurriculumAdmin(admin.ModelAdmin):
 
 class ExamRequestAdmin(admin.ModelAdmin):
     date_hierarchy = "timestamp"
-    list_filter = ("foirequest__status", "foirequest__resolution", "curriculum")
+    list_filter = (
+        "curriculum__state",
+        "foirequest__status",
+        "foirequest__resolution",
+        "curriculum",
+    )
     list_display = (
         "name",
         "timestamp",
         "link",
     )
     raw_id_fields = ("foirequest",)
-    actions = ("set_end_year_to_current",)
+    actions = ("set_end_year_to_current", "allow_publication", "disallow_publication")
 
     def name(self, obj):
         return obj.__str__()
@@ -61,6 +68,17 @@ class ExamRequestAdmin(admin.ModelAdmin):
     def set_end_year_to_current(self, request, queryset):
         end_year = date.today().replace(month=12, day=31)
         queryset.update(end_year=end_year)
+
+    def set_not_publishable(self, queryset, not_publishable):
+        FoiRequest.objects.filter(examrequest__in=queryset).update(
+            not_publishable=not_publishable
+        )
+
+    def disallow_publication(self, request, queryset):
+        self.set_not_publishable(queryset, True)
+
+    def allow_publication(self, request, queryset):
+        self.set_not_publishable(queryset, False)
 
     set_end_year_to_current.short_description = _("Set end year to current year")
 
