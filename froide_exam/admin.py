@@ -1,8 +1,9 @@
 from datetime import date
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 from froide.foirequest.models import FoiRequest
 
@@ -74,18 +75,29 @@ class ExamRequestAdmin(admin.ModelAdmin):
         end_year = date.today().replace(month=12, day=31)
         queryset.update(end_year=end_year)
 
-    def set_not_publishable(self, queryset, not_publishable):
-        FoiRequest.objects.filter(examrequest__in=queryset).update(
+    def set_not_publishable(self, request, queryset, not_publishable):
+        updated = FoiRequest.objects.filter(examrequest__in=queryset).update(
             not_publishable=not_publishable
+        )
+
+        self.message_user(
+            request,
+            ngettext(
+                "%d foi request was updated.",
+                "%d foi requests were updated.",
+                updated,
+            )
+            % updated,
+            messages.SUCCESS,
         )
 
     @admin.action(description=_("Disallow publication of requests"))
     def disallow_publication(self, request, queryset):
-        self.set_not_publishable(queryset, True)
+        self.set_not_publishable(request, queryset, True)
 
     @admin.action(description=_("Allow publication of requests"))
     def allow_publication(self, request, queryset):
-        self.set_not_publishable(queryset, False)
+        self.set_not_publishable(request, queryset, False)
 
 
 @admin.register(PrivateCopy)
