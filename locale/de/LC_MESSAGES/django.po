@@ -1,0 +1,118 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-23 17:30+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: froide_exam/admin.py:61
+msgid "Externer Link"
+msgstr ""
+
+#: froide_exam/admin.py:73
+msgid "Set end year to current year"
+msgstr ""
+
+#: froide_exam/admin.py:86
+#, python-format
+msgid "%d foi request was updated."
+msgid_plural "%d foi requests were updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: froide_exam/admin.py:94
+msgid "Disallow publication of requests"
+msgstr ""
+
+#: froide_exam/admin.py:98
+msgid "Allow publication of requests"
+msgstr ""
+
+#: froide_exam/apps.py:8
+msgid "Froide Exam App"
+msgstr ""
+
+#: froide_exam/cms_apps.py:8
+msgid "Exam CMS App"
+msgstr ""
+
+#: froide_exam/cms_plugins.py:14
+msgid "Froide Exam"
+msgstr ""
+
+#: froide_exam/cms_plugins.py:15
+msgid "Exam Curriculum Overview"
+msgstr ""
+
+#: froide_exam/models.py:16
+msgid "Anfragbar"
+msgstr ""
+
+#: froide_exam/models.py:17
+msgid "Anfragbar (nicht veröffentlichbar)"
+msgstr ""
+
+#: froide_exam/models.py:18
+msgid "Schon öffentlich"
+msgstr ""
+
+#: froide_exam/models.py:19
+msgid "Nicht anfragbar"
+msgstr ""
+
+#: froide_exam/models.py:29
+msgid "exam subjects"
+msgstr ""
+
+#: froide_exam/models.py:49
+msgid "states"
+msgstr ""
+
+#: froide_exam/models.py:83
+msgid "curricula"
+msgstr ""
+
+#: froide_exam/models.py:122
+msgid "exam request"
+msgstr ""
+
+#: froide_exam/models.py:123
+msgid "exam requests"
+msgstr ""
+
+#: froide_exam/models.py:141
+msgid "private copy"
+msgstr ""
+
+#: froide_exam/models.py:142
+msgid "private copies"
+msgstr ""
+
+#: froide_exam/views.py:135
+msgid "Ungültiges Token."
+msgstr ""
+
+#: froide_exam/views.py:156
+msgid "Prüfungsaufgaben"
+msgstr ""
+
+#: froide_exam/views.py:164
+msgid "Wir haben dir eine E-Mail gesendet."
+msgstr ""
+
+#: froide_exam/views.py:168
+msgid "Die E-Mail-Adresse ist ungültig."
+msgstr ""
