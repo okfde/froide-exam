@@ -58,7 +58,7 @@ class ExamRequestAdmin(admin.ModelAdmin):
 
     def link(self, obj):
         url = None
-        title = _("Externer Link")
+        title = _("External link")
 
         if obj.url:
             url = obj.url

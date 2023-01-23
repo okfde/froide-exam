@@ -1,22 +1,19 @@
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
-
-from cms.models.fields import PlaceholderField
-
 import uuid
 
-from froide.publicbody.models import PublicBody, Jurisdiction
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+
 from froide.foirequest.models import FoiRequest
+from froide.publicbody.models import PublicBody
 
-from .utils import MIN_YEAR, MAX_YEAR
-
+from .utils import MAX_YEAR, MIN_YEAR
 
 LEGAL_STATUS_CHOICES = (
-    ("request", _("Anfragbar")),
-    ("request_not_publish", _("Anfragbar (nicht veröffentlichbar)")),
-    ("public", _("Schon öffentlich")),
-    ("unrequestable", _("Nicht anfragbar")),
+    ("request", _("Requestable")),
+    ("request_not_publish", _("Requestable (not publishable)")),
+    ("public", _("Already public")),
+    ("unrequestable", _("Not requestable")),
 )
 
 

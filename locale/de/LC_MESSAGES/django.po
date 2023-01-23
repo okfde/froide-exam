@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 17:30+0100\n"
+"POT-Creation-Date: 2023-01-23 17:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: froide_exam/admin.py:61
-msgid "Externer Link"
+msgid "External link"
 msgstr ""
 
 #: froide_exam/admin.py:73
@@ -58,19 +58,19 @@ msgid "Exam Curriculum Overview"
 msgstr ""
 
 #: froide_exam/models.py:16
-msgid "Anfragbar"
+msgid "Requestable"
 msgstr ""
 
 #: froide_exam/models.py:17
-msgid "Anfragbar (nicht veröffentlichbar)"
+msgid "Requestable (not publishable)"
 msgstr ""
 
 #: froide_exam/models.py:18
-msgid "Schon öffentlich"
+msgid "Already public"
 msgstr ""
 
 #: froide_exam/models.py:19
-msgid "Nicht anfragbar"
+msgid "Not requestable"
 msgstr ""
 
 #: froide_exam/models.py:29
@@ -102,17 +102,17 @@ msgid "private copies"
 msgstr ""
 
 #: froide_exam/views.py:135
-msgid "Ungültiges Token."
+msgid "Invalid token."
 msgstr ""
 
 #: froide_exam/views.py:156
-msgid "Prüfungsaufgaben"
+msgid "Exam questions"
 msgstr ""
 
 #: froide_exam/views.py:164
-msgid "Wir haben dir eine E-Mail gesendet."
+msgid "We have sent you an email."
 msgstr ""
 
 #: froide_exam/views.py:168
-msgid "Die E-Mail-Adresse ist ungültig."
+msgid "Your email address is invalid."
 msgstr ""

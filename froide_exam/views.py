@@ -1,18 +1,18 @@
 from collections import defaultdict
 
 from django import forms
-from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q
-from django.http import Http404
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
+from django.db.models import Q
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
 from froide.foirequest.models import FoiRequest
 
-from .models import State, Curriculum, ExamRequest, PrivateCopy
-from .utils import SubjectYear, MAX_YEAR, YEARS
+from .models import Curriculum, ExamRequest, PrivateCopy, State
+from .utils import MAX_YEAR, YEARS, SubjectYear
 
 ALL = "all"
 
@@ -132,7 +132,7 @@ def private_copy(request):
         try:
             PrivateCopy.objects.get(token=token)
         except (PrivateCopy.DoesNotExist, ValidationError):
-            messages.add_message(request, messages.ERROR, _("Ungültiges Token."))
+            messages.add_message(request, messages.ERROR, _("Invalid token."))
         else:
             return render(request, "froide_exam/view_private_copy.html")
 
@@ -153,7 +153,7 @@ Das Team von FragDenStaat""".format(
             )
 
             send_mail(
-                _("Prüfungsaufgaben"),
+                _("Exam questions"),
                 message,
                 "info@fragdenstaat.de",
                 [email],
@@ -161,11 +161,11 @@ Das Team von FragDenStaat""".format(
             )
 
             messages.add_message(
-                request, messages.SUCCESS, _("Wir haben dir eine E-Mail gesendet.")
+                request, messages.SUCCESS, _("We have sent you an email.")
             )
         else:
             messages.add_message(
-                request, messages.ERROR, _("Die E-Mail-Adresse ist ungültig.")
+                request, messages.ERROR, _("Your email address is invalid.")
             )
 
     return render(request, "froide_exam/request_private_copy.html")
