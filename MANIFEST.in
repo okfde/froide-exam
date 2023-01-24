@@ -1,3 +1,5 @@
 include README.md LICENSE
 recursive-include froide_exam/templates *
 recursive-include froide_exam/static *
+recursive-include froide_legalaction/locale *.po
+recursive-include froide_legalaction/locale *.mo
