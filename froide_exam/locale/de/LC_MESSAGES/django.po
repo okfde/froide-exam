@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 17:39+0100\n"
+"POT-Creation-Date: 2023-09-18 13:28+0200\n"
 "PO-Revision-Date: 2023-01-23 16:47+0000\n"
 "Last-Translator: krmax44 <hi@krmax44.de>\n"
 "Language-Team: German <https://weblate.frag-den-staat.de/projects/froide/"
@@ -19,101 +19,101 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.14.2\n"
 
-#: froide_exam/admin.py:61
+#: froide_exam/admin.py
 msgid "External link"
 msgstr "Externer Link"
 
-#: froide_exam/admin.py:73
+#: froide_exam/admin.py
 msgid "Set end year to current year"
 msgstr "Endjahr auf aktuelles Jahr setzen"
 
-#: froide_exam/admin.py:86
+#: froide_exam/admin.py
 #, python-format
 msgid "%d foi request was updated."
 msgid_plural "%d foi requests were updated."
 msgstr[0] "%d IFG-Anfrage wurde aktualisiert."
 msgstr[1] "%d IFG-Anfragen wurden aktualisiert."
 
-#: froide_exam/admin.py:94
+#: froide_exam/admin.py
 msgid "Disallow publication of requests"
 msgstr "Veröffentlichung der Anfragen verbieten"
 
-#: froide_exam/admin.py:98
+#: froide_exam/admin.py
 msgid "Allow publication of requests"
 msgstr "Veröffentlichung der Anfragen erlauben"
 
-#: froide_exam/apps.py:8
+#: froide_exam/apps.py
 msgid "Froide Exam App"
 msgstr "Froide Prüfungs-App"
 
-#: froide_exam/cms_apps.py:8
+#: froide_exam/cms_apps.py
 msgid "Exam CMS App"
 msgstr "Prüfungs-CMS-App"
 
-#: froide_exam/cms_plugins.py:14
+#: froide_exam/cms_plugins.py
 msgid "Froide Exam"
 msgstr "Froide Prüfungen"
 
-#: froide_exam/cms_plugins.py:15
+#: froide_exam/cms_plugins.py
 msgid "Exam Curriculum Overview"
 msgstr "Übersicht der Prüfungsfächer"
 
-#: froide_exam/models.py:16
+#: froide_exam/models.py
 msgid "Requestable"
 msgstr "Anfragbar"
 
-#: froide_exam/models.py:17
+#: froide_exam/models.py
 msgid "Requestable (not publishable)"
 msgstr "Anfragbar (nicht veröffentlichbar)"
 
-#: froide_exam/models.py:18
+#: froide_exam/models.py
 msgid "Already public"
 msgstr "Schon öffentlich"
 
-#: froide_exam/models.py:19
+#: froide_exam/models.py
 msgid "Not requestable"
 msgstr "Nicht anfragbar"
 
-#: froide_exam/models.py:29
+#: froide_exam/models.py
 msgid "exam subjects"
 msgstr "Prüfungsfächer"
 
-#: froide_exam/models.py:49
+#: froide_exam/models.py
 msgid "states"
 msgstr "Länder"
 
-#: froide_exam/models.py:83
+#: froide_exam/models.py
 msgid "curricula"
 msgstr "Prüfungsformen"
 
-#: froide_exam/models.py:122
+#: froide_exam/models.py
 msgid "exam request"
 msgstr "Prüfungsanfrage"
 
-#: froide_exam/models.py:123
+#: froide_exam/models.py
 msgid "exam requests"
 msgstr "Prüfungsanfragen"
 
-#: froide_exam/models.py:141
+#: froide_exam/models.py
 msgid "private copy"
 msgstr "Privatkopie"
 
-#: froide_exam/models.py:142
+#: froide_exam/models.py
 msgid "private copies"
 msgstr "Privatkopien"
 
-#: froide_exam/views.py:135
+#: froide_exam/views.py
 msgid "Invalid token."
 msgstr "Ungültiges Token."
 
-#: froide_exam/views.py:156
+#: froide_exam/views.py
 msgid "Exam questions"
 msgstr "Prüfungsfragen"
 
-#: froide_exam/views.py:164
+#: froide_exam/views.py
 msgid "We have sent you an email."
 msgstr "Wir haben dir eine E-Mail gesendet."
 
-#: froide_exam/views.py:168
+#: froide_exam/views.py
 msgid "Your email address is invalid."
 msgstr "Deine E-Mail-Adresse ist ungültig."
