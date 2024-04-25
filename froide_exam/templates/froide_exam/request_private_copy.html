@@ -1,33 +1,32 @@
 {% extends "froide_exam/base.html" %}
-{% load cms_tags %}
-
+{% load djangocms_alias_tags %}
 {% block exam_breadcrumbs %}
-<li class="breadcrumb-item active">
-  Privatkopie anfordern
-</li>
-{% endblock %}
-
+    <li class="breadcrumb-item active">Privatkopie anfordern</li>
+{% endblock exam_breadcrumbs %}
 {% block froide_exam %}
-{% static_placeholder 'froide_exam_private_copy' %}
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 mx-auto">
-      <form method="post">
-        {% csrf_token %}
-        <div class="input-group">
-          <input placeholder="E-Mail" class="form-control" type="email" name="email" required value="{{ request.user.email }}">
-          <button type="submit" class="btn btn-primary">
-            Privatkopie erhalten!
-          </button>
+    {% static_alias 'froide_exam_private_copy' %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input placeholder="E-Mail"
+                               class="form-control"
+                               type="email"
+                               name="email"
+                               required
+                               value="{{ request.user.email }}">
+                        <button type="submit" class="btn btn-primary">Privatkopie erhalten!</button>
+                    </div>
+                </form>
+                <p class="small mt-3">
+                    {# djlint:off D018 #}
+                    Wir schicken dir ausschließlich einen Link zu deiner Privatkopie. Die E-Mail-Adresse wird nicht gespeichert. Es gilt die <a href="/datenschutzerklaerung/">Datenschutzerklärung</a>.
+                    {# djlint:on #}
+                </p>
+            </div>
         </div>
-      </form>
-      <p class="small mt-3">
-        Wir schicken dir ausschließlich einen Link zu deiner Privatkopie. Die E-Mail-Adresse wird nicht gespeichert. Es gilt die <a href="/datenschutzerklaerung/">Datenschutzerklärung</a>.
-      </p>
     </div>
-  </div>
-</div>
-
-{% static_placeholder 'froide_exam_private_copy_footer' %}
-{% endblock %}
+    {% static_alias 'froide_exam_private_copy_footer' %}
+{% endblock froide_exam %}

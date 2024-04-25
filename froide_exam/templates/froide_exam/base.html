@@ -1,28 +1,25 @@
 {% extends CMS_TEMPLATE %}
-
 {% load frontendbuild %}
 {% load cms_tags %}
+{% load djangocms_alias_tags %}
 {% load menu_tags %}
-
 {% block app_body %}
-<nav class="bg-gray-100" aria-label="breadcrumb">
-  <div class="container">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="{% page_url 'verschlusssache-pruefung' %}">Verschlusssache Prüfung</a>
-      </li>
-      {% block exam_breadcrumbs %}{% endblock %}
-    </ol>
-  </div>
-</nav>
-
-{% static_placeholder 'froide_exam_header' %}
-
-<div class="container mt-3 mb-5">
-  {% block froide_exam %}{% endblock %}
-</div>
-
-{% static_placeholder 'froide_exam_footer' %}
-
-{% include "_frontend.html" with entry_point="exam_curriculum.js" %}
-{% endblock %}
+    <nav class="bg-gray-100" aria-label="breadcrumb">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% page_url 'verschlusssache-pruefung' %}">Verschlusssache Prüfung</a>
+                </li>
+                {% block exam_breadcrumbs %}
+                {% endblock exam_breadcrumbs %}
+            </ol>
+        </div>
+    </nav>
+    {% static_alias 'froide_exam_header' %}
+    <div class="container mt-3 mb-5">
+        {% block froide_exam %}
+        {% endblock froide_exam %}
+    </div>
+    {% static_alias 'froide_exam_footer' %}
+    {% include "_frontend.html" with entry_point="exam_curriculum.js" %}
+{% endblock app_body %}

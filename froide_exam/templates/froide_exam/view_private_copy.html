@@ -1,6 +1,5 @@
 {% extends "froide_exam/base.html" %}
-{% load cms_tags %}
-
+{% load djangocms_alias_tags %}
 {% block froide_exam %}
-{% static_placeholder 'froide_exam_view_private_copy' %}
-{% endblock %}
+    {% static_alias 'froide_exam_view_private_copy' %}
+{% endblock froide_exam %}
