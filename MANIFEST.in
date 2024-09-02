@@ -1,5 +1,6 @@
-include README.md LICENSE
+include README.md LICENSE package.json
 recursive-include froide_exam/templates *
 recursive-include froide_exam/static *
-recursive-include froide_legalaction/locale *.po
-recursive-include froide_legalaction/locale *.mo
+recursive-include froide_exam/locale *.po
+recursive-include froide_exam/locale *.mo
+recursive-include frontend *
