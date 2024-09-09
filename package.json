@@ -13,5 +13,9 @@
   "bugs": {
     "url": "https://github.com/okfde/froide-exam/issues"
   },
-  "homepage": "https://github.com/okfde/froide-exam#readme"
+  "homepage": "https://github.com/okfde/froide-exam#readme",
+  "devDependencies": {
+    "@okfde/eslint-config-froide": "github:okfde/eslint-config-froide"
+  },
+  "prettier": "prettier-config-standard"
 }
