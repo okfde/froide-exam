@@ -16,7 +16,6 @@ classifiers = [
   "Topic :: Utilities",
 ]
 version = "0.0.1"
-dependencies = ["djangorestframework"]
 
 [build-system]
 requires = ["setuptools"]
