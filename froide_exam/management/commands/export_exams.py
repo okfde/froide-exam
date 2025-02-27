@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 
 from froide_exam.models import ExamRequest
 from froide.foirequest.models import FoiAttachment
+from froide.helper.storage import make_unique_filename
 
 import zipfile
 
@@ -28,8 +29,14 @@ class Command(BaseCommand):
             # create a zip file with the following structure:
             # {state_name}/{subject_name}/{year}/{request_pk}/{attachment_name}
 
+            filenames = []
+
             for attachment in attachments:
                 year = str(exam.start_year.year)
+
+                filename = make_unique_filename(attachment.name, filenames)
+                filenames.append(filename)
+
                 zip_path = "/".join(
                     [
                         exam.curriculum.state.name,
@@ -37,7 +44,7 @@ class Command(BaseCommand):
                         exam.subject.name,
                         year,
                         str(exam.foirequest.pk),
-                        attachment.name,
+                        filename,
                     ]
                 )
 
