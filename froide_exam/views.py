@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
 from froide.foirequest.models import FoiRequest
+from froide.helper.spam import SpamProtectionMixin
 
 from .models import Curriculum, ExamRequest, PrivateCopy, State
 from .utils import MAX_YEAR, YEARS, SubjectYear
@@ -122,8 +123,12 @@ def state_view(request, state_slug=None):
     )
 
 
-class PrivateCopyForm(forms.Form):
-    email = forms.EmailField()
+class PrivateCopyForm(SpamProtectionMixin, forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={"class": "form-control"}),
+    )
+
+    SPAM_PROTECTION = {"captcha": "ip", "action": "exam-privatecopy"}
 
 
 def private_copy(request):
@@ -137,7 +142,7 @@ def private_copy(request):
             return render(request, "froide_exam/view_private_copy.html")
 
     if request.method == "POST":
-        form = PrivateCopyForm(data=request.POST)
+        form = PrivateCopyForm(data=request.POST, request=request)
         if form.is_valid():
             email = form.cleaned_data["email"]
 
@@ -148,9 +153,7 @@ def private_copy(request):
 Hier kannst du die Prüfungsaufgaben einsehen:\r\n
 {}\r\n\r\n
 Beste Grüße\r\n
-Das Team von FragDenStaat""".format(
-                url
-            )
+Das Team von FragDenStaat""".format(url)
 
             send_mail(
                 _("Exam questions"),
@@ -163,9 +166,8 @@ Das Team von FragDenStaat""".format(
             messages.add_message(
                 request, messages.SUCCESS, _("We have sent you an email.")
             )
-        else:
-            messages.add_message(
-                request, messages.ERROR, _("Your email address is invalid.")
-            )
-
-    return render(request, "froide_exam/request_private_copy.html")
+    else:
+        form = PrivateCopyForm(request=request)
+    return render(
+        request, "froide_exam/request_private_copy.html", context={"form": form}
+    )

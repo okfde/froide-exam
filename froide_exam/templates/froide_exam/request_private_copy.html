@@ -1,5 +1,6 @@
 {% extends "froide_exam/base.html" %}
 {% load djangocms_alias_tags %}
+{% load form_helper %}
 {% block exam_breadcrumbs %}
     <li class="breadcrumb-item active">Privatkopie anfordern</li>
 {% endblock exam_breadcrumbs %}
@@ -10,14 +11,9 @@
             <div class="col-md-6 mx-auto">
                 <form method="post">
                     {% csrf_token %}
-                    <div class="input-group">
-                        <input placeholder="E-Mail"
-                               class="form-control"
-                               type="email"
-                               name="email"
-                               required
-                               value="{{ request.user.email }}">
-                        <button type="submit" class="btn btn-primary">Privatkopie erhalten!</button>
+                    {% render_form form %}
+                    <div class="clearfix">
+                        <button type="submit" class="btn btn-primary float-end">Privatkopie erhalten!</button>
                     </div>
                 </form>
                 <p class="small mt-3">
