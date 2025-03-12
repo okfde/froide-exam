@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from froide.document.models import Document
 from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
 
@@ -114,6 +115,8 @@ class ExamRequest(models.Model):
     foirequest = models.ForeignKey(
         FoiRequest, null=True, blank=True, on_delete=models.CASCADE
     )
+
+    documents = models.ManyToManyField(Document, blank=True)
 
     class Meta:
         verbose_name = _("exam request")
