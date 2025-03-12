@@ -41,16 +41,14 @@ class ExamRequestAdmin(admin.ModelAdmin):
     date_hierarchy = "timestamp"
     list_filter = (
         "curriculum__state",
+        "subject",
         "foirequest__status",
         "foirequest__resolution",
         "curriculum",
     )
-    list_display = (
-        "name",
-        "timestamp",
-        "link",
-    )
-    raw_id_fields = ("foirequest",)
+    list_display = ("name", "timestamp", "link")
+    raw_id_fields = ("foirequest", "documents")
+
     actions = ("set_end_year_to_current", "allow_publication", "disallow_publication")
 
     def name(self, obj):

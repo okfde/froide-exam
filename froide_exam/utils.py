@@ -1,8 +1,9 @@
 from urllib.parse import urlencode
 
-from django.utils import timezone
 from django.urls import reverse
+from django.utils import timezone
 
+from froide.foirequest.models import FoiRequest
 
 TODAY = timezone.now().date()
 # max year is this year starting in July, otherwise year before
@@ -173,14 +174,11 @@ class SubjectYear(object):
         pb_slug = self.state.publicbody.slug
         url = reverse("foirequest-make_request", kwargs={"publicbody_slug": pb_slug})
         name = curriculum.name
-        subject = (
-            "{name}-Aufgaben im Fach {subject} "
-            "im Jahr {year} in {state}".format(
-                name=name,
-                subject=self.subject,
-                year=self.year,
-                state=curriculum.state.name,
-            )
+        subject = "{name}-Aufgaben im Fach {subject} im Jahr {year} in {state}".format(
+            name=name,
+            subject=self.subject,
+            year=self.year,
+            state=curriculum.state.name,
         )
         if len(subject) > 250:
             subject = subject[:250] + "..."
@@ -247,6 +245,6 @@ class SubjectYear(object):
                 return False
 
 
-def is_request_stale(foirequest):
+def is_request_stale(foirequest: FoiRequest) -> bool:
     last_message = (timezone.now() - foirequest.last_message).days
     return foirequest.awaits_response() and last_message > STALE_THRESHOLD
