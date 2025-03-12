@@ -1,10 +1,11 @@
+import zipfile
+
 from django.core.management.base import BaseCommand
 
-from froide_exam.models import ExamRequest
 from froide.foirequest.models import FoiAttachment
 from froide.helper.storage import make_unique_filename
 
-import zipfile
+from froide_exam.models import ExamRequest
 
 
 class Command(BaseCommand):

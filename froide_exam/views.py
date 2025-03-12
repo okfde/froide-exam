@@ -37,7 +37,7 @@ def state_view(request, state_slug=None):
     state = get_object_or_404(State, slug=state_slug)
 
     all_curricula = Curriculum.objects.filter(state=state)
-    types = map(lambda c: {"name": c.name, "slug": c.slug}, all_curricula)
+    types = ({"name": c.name, "slug": c.slug} for c in all_curricula)
 
     curricula = []
     requested_type = request.GET.get("type")
@@ -148,9 +148,7 @@ def private_copy(request):
 Hier kannst du die Prüfungsaufgaben einsehen:\r\n
 {}\r\n\r\n
 Beste Grüße\r\n
-Das Team von FragDenStaat""".format(
-                url
-            )
+Das Team von FragDenStaat""".format(url)
 
             send_mail(
                 _("Exam questions"),

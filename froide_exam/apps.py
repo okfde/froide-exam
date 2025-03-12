@@ -8,8 +8,9 @@ class FroideExamConfig(AppConfig):
     verbose_name = _("Froide Exam App")
 
     def ready(self):
-        from .listeners import connect_request_object, hide_attachments
         from froide.foirequest.models import FoiRequest
+
+        from .listeners import connect_request_object, hide_attachments
 
         FoiRequest.request_created.connect(connect_request_object)
         FoiRequest.message_received.connect(hide_attachments)

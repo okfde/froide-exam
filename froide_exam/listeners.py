@@ -1,9 +1,10 @@
 from datetime import datetime
+
 from django.utils import timezone
 
 from froide.foirequest.models import FoiAttachment
 
-from .models import ExamRequest, Subject, Curriculum
+from .models import Curriculum, ExamRequest, Subject
 from .utils import REFERENCE_NAMESPACE, is_request_stale
 
 

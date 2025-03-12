@@ -2,9 +2,8 @@
   TODO: remove if-elif-else spaghetti, it's pretty hard to
   grasp the connections and know what will be displayed when.
 {% endcomment %}
-
 {% for subject_year in subject.years %}
-  {% comment %}
+    {% comment %}
   <ul class="mb-4">
     <li>{{ subject_year.can_request }}</li>
     <li>{{ subject_year.year }}</li>
@@ -16,29 +15,27 @@
     <li>{{ state.is_oneclick }}</li>
     <li>{{ subject_year.exam_request.foirequest }}</li>
   </ul>
-  {% endcomment %}
-
-  {% if subject_year.exam_request %}
-    {% if subject_year.request_awaiting_user %}
-      {% include "./state_year_tag.html" with title="Wird angefragt..." status="warning" icon="clock" %}
-    {% elif subject_year.exam_request.url %}
-      {% include "./state_year_tag.html" with link=subject_year.exam_request.url title="Schon öffentlich" icon="download" status="success" %}
-    {% elif not state.is_oneclick %}
-      {% include "./state_year_tag.html" with link=subject_year.exam_request.foirequest.get_absolute_url_last_message %}
-    {% else %}
-      {% if not subject_year.can_request %}
-        {% include "./state_year_tag.html" with link=subject_year.get_same_request.get_absolute_url %}
-      {% endif %}
+    {% endcomment %}
+    {% if subject_year.exam_request %}
+        {% if subject_year.request_awaiting_user %}
+            {% include "./state_year_tag.html" with title="Wird angefragt..." status="warning" icon="clock" %}
+        {% elif subject_year.exam_request.url %}
+            {% include "./state_year_tag.html" with link=subject_year.exam_request.url title="Schon öffentlich" icon="download" status="success" %}
+        {% elif not state.is_oneclick %}
+            {% include "./state_year_tag.html" with link=subject_year.exam_request.foirequest.get_absolute_url_last_message %}
+        {% else %}
+            {% if not subject_year.can_request %}
+                {% include "./state_year_tag.html" with link=subject_year.get_same_request.get_absolute_url %}
+            {% endif %}
+        {% endif %}
     {% endif %}
-  {% endif %}
-
-  {% if subject_year.can_request %}
-    {% if subject_year.is_one_click and subject_year.exam_request.foirequest %}
-      {% with subject_year.exam_request.foirequest.get_absolute_url|add:"#make-same-request" as url %}
-        {% include "./state_year_tag.html" with icon="circle" link=url title="Jetzt auch anfragen!" status="light" %}
-      {% endwith %}
-    {% elif not subject_year.exam_request %}
-      {% include "./state_year_tag.html" with icon="circle" link=subject_year.make_request_url title="Jetzt anfragen!" status="light" %}
+    {% if subject_year.can_request %}
+        {% if subject_year.is_one_click and subject_year.exam_request.foirequest %}
+            {% with subject_year.exam_request.foirequest.get_absolute_url|add:"#make-same-request" as url %}
+                {% include "./state_year_tag.html" with icon="circle" link=url title="Jetzt auch anfragen!" status="light" %}
+            {% endwith %}
+        {% elif not subject_year.exam_request %}
+            {% include "./state_year_tag.html" with icon="circle" link=subject_year.make_request_url title="Jetzt anfragen!" status="light" %}
+        {% endif %}
     {% endif %}
-  {% endif %}
 {% endfor %}

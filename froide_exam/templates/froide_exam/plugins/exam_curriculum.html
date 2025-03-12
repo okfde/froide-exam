@@ -1,62 +1,58 @@
 {% load cms_tags %}
 {% load frontendbuild %}
-
 {% block main %}
-
-<div class="row justify-content-center">
-  {% for state in states %}
-  <div class="col-md-6 mt-3">
-    <div
-      class="card h-100 {% if state.legal_status == 'public' %}exam-overview-public{% elif state.is_deadend %}exam-overview-deadend{% else %}exam-overview-requestable{% endif %}">
-      <div class="card-body">
-        <h5 class="card-title">
-          <a href="{{ state.get_absolute_url }}" class="{% if state.is_deadend %}text-body{% endif %}">
-            {{ state.name }}
-          </a>
-        </h5>
-        <div>
-          {% if state.legal_status == 'public' %}
-          <small class="text-secondary">
-            <i class="fa fa-check"></i> Die Aufgaben sind bereits öffentlich!
-          </small>
-          {% elif state.is_deadend %}
-          <small class="text-secondary">
-            Kann nicht angefragt werden.
-            <a href="./faq/#ablehnungen" class="badge rounded-pill text-bg-light exam-overview-badge" data-bs-toggle="tooltip"
-              data-placement="top" title="Mehr Informationen">
-              <i class="fa fa-question"></i>
-            </a>
-          </small>
-          {% else %}
-          {% for curriculum in state.curricula %}
-          <a href="{{ state.get_absolute_url }}?type={{ curriculum.slug }}"
-            class="badge rounded-pill text-bg-light exam-overview-badge me-2 fw-normal" data-bs-toggle="tooltip" data-placement="top"
-            title="Schon {{ curriculum.request_count }} Anfragen">
-            {{ curriculum.name }}
-          </a>
-          {% endfor %}
-          {% endif %}
+    <div class="row justify-content-center">
+        {% for state in states %}
+            <div class="col-md-6 mt-3">
+                <div class="card h-100 {% if state.legal_status == 'public' %}exam-overview-public{% elif state.is_deadend %}exam-overview-deadend{% else %}exam-overview-requestable{% endif %}">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ state.get_absolute_url }}"
+                               class="{% if state.is_deadend %}text-body{% endif %}">{{ state.name }}</a>
+                        </h5>
+                        <div>
+                            {% if state.legal_status == 'public' %}
+                                <small class="text-secondary">
+                                    <i class="fa fa-check"></i> Die Aufgaben sind bereits öffentlich!
+                                </small>
+                            {% elif state.is_deadend %}
+                                <small class="text-secondary">
+                                    Kann nicht angefragt werden.
+                                    <a href="./faq/#ablehnungen"
+                                       class="badge rounded-pill text-bg-light exam-overview-badge"
+                                       data-bs-toggle="tooltip"
+                                       data-placement="top"
+                                       title="Mehr Informationen">
+                                        <i class="fa fa-question"></i>
+                                    </a>
+                                </small>
+                            {% else %}
+                                {% for curriculum in state.curricula %}
+                                    <a href="{{ state.get_absolute_url }}?type={{ curriculum.slug }}"
+                                       class="badge rounded-pill text-bg-light exam-overview-badge me-2 fw-normal"
+                                       data-bs-toggle="tooltip"
+                                       data-placement="top"
+                                       title="Schon {{ curriculum.request_count }} Anfragen">{{ curriculum.name }}</a>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="my-4">
+        <div class="d-md-flex small">
+            <div>
+                <i class="fa fa-circle text-success"></i> Aufgaben schon öffentlich
+            </div>
+            <div class="ms-md-3">
+                <i class="fa fa-circle text-primary"></i> Aufgaben können angefragt werden
+            </div>
+            <div class="ms-md-3">
+                <i class="fa fa-circle text-gray-500"></i> Aufgaben können nicht angefragt werden
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  {% endfor %}
-</div>
-
-<div class="my-4">
-  <div class="d-md-flex small">
-    <div>
-      <i class="fa fa-circle text-success"></i> Aufgaben schon öffentlich
-    </div>
-    <div class="ms-md-3">
-      <i class="fa fa-circle text-primary"></i> Aufgaben können angefragt werden
-    </div>
-    <div class="ms-md-3">
-      <i class="fa fa-circle text-gray-500"></i> Aufgaben können nicht angefragt werden
-    </div>
-  </div>
-</div>
-
-{% include "_frontend.html" with entry_point="exam_curriculum.js" %}
-
-{% endblock %}
+    {% include "_frontend.html" with entry_point="exam_curriculum.js" %}
+{% endblock main %}
