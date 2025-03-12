@@ -1,0 +1,81 @@
+import unicodedata
+import zipfile
+from collections import defaultdict
+from datetime import date
+from pathlib import PurePath
+
+from django.core.management.base import BaseCommand
+
+from filingcabinet.services import ZIP_BLOCK_LIST
+
+from froide.document.models import Document
+
+from ...models import Curriculum, ExamRequest, Subject
+
+
+def fix_encoding(text):
+    return unicodedata.normalize("NFC", text.encode("cp437").decode("utf-8"))
+
+
+class Command(BaseCommand):
+    help = "Import sorted exams as documents"
+
+    def add_arguments(self, parser):
+        parser.add_argument("input_file")
+        parser.add_argument("user_id")
+
+    def handle(self, *args, **options):
+        documents = defaultdict(list)
+
+        subjects = {s.name: s for s in Subject.objects.all()}
+        curricula = defaultdict(dict)
+
+        for curriculum in Curriculum.objects.prefetch_related("state").all():
+            curricula[curriculum.state.name][curriculum.name] = curriculum
+
+        with zipfile.ZipFile(options["input_file"], "r") as zf:
+            zip_paths = []
+
+            for zip_info in zf.infolist():
+                path = PurePath(zip_info.filename)
+                parts = path.parts
+                if parts[0] in ZIP_BLOCK_LIST:
+                    continue
+
+                if path.suffix == ".pdf":
+                    zip_paths.append(path)
+
+            print("Found", len(zip_paths), "PDFs")
+
+            for path in zip_paths:
+                parts = [fix_encoding(part) for part in path.parts]
+                state, curriculum, subject, year, _foirequest_id, filename = parts
+
+                title = f"{subject} - {curriculum} {year} ({state})"
+
+                document = Document.objects.create(
+                    title=title,
+                    user_id=int(options["user_id"]),
+                    public=True,
+                    pending=True,
+                )
+                documents[(state, curriculum, subject, year)].append(document)
+
+                document.pdf_file.save(filename, zf.open(str(path)), save=True)
+                # process manually through admin
+                # transaction.on_commit(trigger_process_document_task(document.pk))
+
+                print(f"Imported {title}", document.pk)
+
+        for (state, curriculum, subject, year), docs in documents.items():
+            exam_request = ExamRequest.objects.create(
+                curriculum=curricula[state][curriculum],
+                subject=subjects[subject],
+                start_year=date(int(year), 1, 1),
+            )
+
+            exam_request.documents.set(docs)
+            exam_request.save()
+            print(f"Created {exam_request}", exam_request.pk)
+
+        print("Done.")
