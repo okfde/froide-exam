@@ -3,7 +3,7 @@ from collections import defaultdict
 from django import forms
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.core.mail import send_mail
+from froide.helper.email_sending import send_mail
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
@@ -156,10 +156,9 @@ Beste Grüße\r\n
 Das Team von FragDenStaat""".format(url)
 
             send_mail(
-                _("Exam questions"),
-                message,
-                "info@fragdenstaat.de",
-                [email],
+                subject=_("Exam questions"),
+                body=message,
+                email_address=email,
                 fail_silently=False,
             )
 
