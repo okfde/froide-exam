@@ -3,13 +3,13 @@ from collections import defaultdict
 from django import forms
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from froide.helper.email_sending import send_mail
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
 from froide.foirequest.models import FoiRequest
+from froide.helper.email_sending import send_mail
 from froide.helper.spam import SpamProtectionMixin
 
 from .models import Curriculum, ExamRequest, PrivateCopy, State
@@ -60,7 +60,7 @@ def state_view(request, state_slug=None):
         subjects = curriculum.subjects.all()
 
         exam_requests = ExamRequest.objects.filter(
-            curriculum=curriculum
+            curriculum=curriculum, documents=None
         ).select_related("foirequest")
         exam_request_map = defaultdict(list)
 
