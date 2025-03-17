@@ -56,10 +56,13 @@ class Command(BaseCommand):
                 year = parts[3]
                 filename = parts[-1]
 
-                title = f"{subject} - {curriculum} {year} ({state})"
+                description = (
+                    f"{curriculum}-Prüfung in {state} aus {year} in {subject} "
+                )
 
                 document = Document.objects.create(
-                    title=title,
+                    title=filename.replace(".pdf", ""),
+                    description=description,
                     user_id=int(options["user_id"]),
                     public=True,
                     pending=True,
@@ -69,7 +72,7 @@ class Command(BaseCommand):
                 document.pdf_file.save(filename, zf.open(str(path)), save=True)
                 transaction.on_commit(trigger_process_document_task(document.pk))
 
-                print(f"Imported {title}", document.pk)
+                print(f"Imported {filename}", document.pk)
 
         for (state, curriculum, subject, year), docs in documents.items():
             exam_request = ExamRequest.objects.create(
