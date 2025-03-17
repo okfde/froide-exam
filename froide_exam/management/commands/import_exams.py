@@ -5,8 +5,9 @@ from datetime import date
 from pathlib import PurePath
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
-from filingcabinet.services import ZIP_BLOCK_LIST
+from filingcabinet.services import ZIP_BLOCK_LIST, trigger_process_document_task
 
 from froide.document.models import Document
 
@@ -49,7 +50,11 @@ class Command(BaseCommand):
 
             for path in zip_paths:
                 parts = [fix_encoding(part) for part in path.parts]
-                state, curriculum, subject, year, _foirequest_id, filename = parts
+                state = parts[0]
+                curriculum = parts[1]
+                subject = parts[2]
+                year = parts[3]
+                filename = parts[-1]
 
                 title = f"{subject} - {curriculum} {year} ({state})"
 
@@ -62,8 +67,7 @@ class Command(BaseCommand):
                 documents[(state, curriculum, subject, year)].append(document)
 
                 document.pdf_file.save(filename, zf.open(str(path)), save=True)
-                # process manually through admin
-                # transaction.on_commit(trigger_process_document_task(document.pk))
+                transaction.on_commit(trigger_process_document_task(document.pk))
 
                 print(f"Imported {title}", document.pk)
 
