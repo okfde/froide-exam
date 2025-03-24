@@ -60,11 +60,19 @@ class Command(BaseCommand):
                     f"{curriculum}-Prüfung in {state} aus {year} in {subject} "
                 )
 
+                data = {
+                    "state": curricula[state][curriculum].state.id,
+                    "curriculum": curricula[state][curriculum].id,
+                    "subject": subjects[subject].id,
+                    "year": year,
+                }
+
                 document = Document.objects.create(
                     title=filename.replace(".pdf", ""),
                     description=description,
                     user_id=int(options["user_id"]),
-                    public=True,
+                    data=data,
+                    public=False,
                     pending=True,
                 )
                 documents[(state, curriculum, subject, year)].append(document)
