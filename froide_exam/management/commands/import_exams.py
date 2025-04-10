@@ -72,7 +72,7 @@ class Command(BaseCommand):
                     description=description,
                     user_id=int(options["user_id"]),
                     data=data,
-                    public=False,
+                    public=True,
                     pending=True,
                 )
                 documents[(state, curriculum, subject, year)].append(document)
