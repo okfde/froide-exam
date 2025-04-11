@@ -83,7 +83,7 @@ class Command(BaseCommand):
                 print(f"Imported {filename}", document.pk)
 
         for (state, curriculum, subject, year), docs in documents.items():
-            exam_request, created = ExamRequest.objects.get_or_create(
+            exam_request = ExamRequest.objects.create(
                 curriculum=curricula[state][curriculum],
                 subject=subjects[subject],
                 start_year=date(int(year), 1, 1),
@@ -91,6 +91,6 @@ class Command(BaseCommand):
 
             exam_request.documents.set(docs)
             exam_request.save()
-            print(f"Created ({created}) {exam_request}", exam_request.pk)
+            print(f"Created {exam_request}", exam_request.pk)
 
         print("Done.")
