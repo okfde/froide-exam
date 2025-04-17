@@ -18,13 +18,16 @@
                             {% elif state.is_deadend %}
                                 <small class="text-secondary">
                                     Kann nicht angefragt werden.
-                                    <a href="./faq/#ablehnungen"
-                                       class="badge rounded-pill text-bg-light exam-overview-badge"
-                                       data-bs-toggle="tooltip"
-                                       data-placement="top"
-                                       title="Mehr Informationen">
-                                        <i class="fa fa-question"></i>
-                                    </a>
+                                    {% page_url "exam-faq" as exam_faq %}
+                                    {% if exam_faq %}
+                                        <a href="{{ exam_faq }}#ablehnungen"
+                                           class="badge rounded-pill text-bg-light exam-overview-badge"
+                                           data-bs-toggle="tooltip"
+                                           data-placement="top"
+                                           title="Mehr Informationen">
+                                            <i class="fa fa-question"></i>
+                                        </a>
+                                    {% endif %}
                                 </small>
                             {% else %}
                                 {% for curriculum in state.curricula %}

@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -61,7 +62,7 @@ class State(models.Model):
 
     def get_absolute_url(self):
         if self.slug:
-            return "app/{}".format(self.slug)
+            return reverse("froide_exam:exam-state", kwargs={"state_slug": self.slug})
         return ""
 
 
