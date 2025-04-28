@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Froide Exam",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/okfde/froide-exam.git"
@@ -15,7 +17,10 @@
   },
   "homepage": "https://github.com/okfde/froide-exam#readme",
   "devDependencies": {
-    "@okfde/eslint-config-froide": "github:okfde/eslint-config-froide"
+    "@okfde/eslint-config-froide": "^1.2.1",
+    "eslint": "^9.25.1",
+    "prettier": "^3.5.3",
+    "prettier-config-standard": "^7.0.0"
   },
   "prettier": "prettier-config-standard"
 }
