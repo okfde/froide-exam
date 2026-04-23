@@ -5,9 +5,14 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
+from froide.document.models import DocumentCollection
 from froide.foirequest.models import FoiRequest
+from froide.helper.admin_utils import (
+    make_choose_object_action,
+)
 
 from .models import Curriculum, ExamRequest, PrivateCopy, State, Subject
+from .tasks import populate_document_collection
 
 
 @admin.register(Subject)
@@ -36,6 +41,12 @@ class CurriculumAdmin(admin.ModelAdmin):
     )
 
 
+def execute_populate_document_collection(admin, request, queryset, action_obj):
+    ids = list(queryset.values_list("id", flat=True))
+
+    populate_document_collection.delay(action_obj.id, ids)
+
+
 @admin.register(ExamRequest)
 class ExamRequestAdmin(admin.ModelAdmin):
     date_hierarchy = "timestamp"
@@ -49,7 +60,12 @@ class ExamRequestAdmin(admin.ModelAdmin):
     list_display = ("name", "timestamp", "link")
     raw_id_fields = ("foirequest", "documents")
 
-    actions = ("set_end_year_to_current", "allow_publication", "disallow_publication")
+    actions = (
+        "set_end_year_to_current",
+        "allow_publication",
+        "disallow_publication",
+        "populate_document_collection",
+    )
 
     def name(self, obj):
         return obj.__str__()
@@ -96,6 +112,12 @@ class ExamRequestAdmin(admin.ModelAdmin):
     @admin.action(description=_("Allow publication of requests"))
     def allow_publication(self, request, queryset):
         self.set_not_publishable(request, queryset, False)
+
+    populate_document_collection = make_choose_object_action(
+        DocumentCollection,
+        execute_populate_document_collection,
+        _("Populate document collection..."),
+    )
 
 
 @admin.register(PrivateCopy)
