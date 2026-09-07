@@ -33,7 +33,7 @@ class Command(BaseCommand):
             filenames = []
 
             for attachment in attachments:
-                year = str(exam.start_year.year)
+                year = str(exam.start_year)
 
                 filename = make_unique_filename(attachment.name, filenames)
                 filenames.append(filename)

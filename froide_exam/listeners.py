@@ -1,7 +1,3 @@
-from datetime import datetime
-
-from django.utils import timezone
-
 from froide.foirequest.models import FoiAttachment
 
 from .models import Curriculum, ExamRequest, Subject
@@ -51,10 +47,8 @@ def connect_request_object(sender, **kwargs):
         # First-time requester
         sender.user.tags.add("exam-first")
 
-    year_date = timezone.make_aware(datetime(year, 1, 1))
-
     er = ExamRequest.objects.filter(
-        curriculum=curriculum, subject=subject, start_year=year_date
+        curriculum=curriculum, subject=subject, start_year=year
     ).first()
 
     if not er or is_request_stale(er.foirequest):
@@ -66,7 +60,7 @@ def connect_request_object(sender, **kwargs):
         ExamRequest.objects.create(
             curriculum=curriculum,
             subject=subject,
-            start_year=year_date,
+            start_year=year,
             timestamp=sender.created_at,
             foirequest=sender,
         )
