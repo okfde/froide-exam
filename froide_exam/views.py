@@ -1,17 +1,21 @@
+import json
 from collections import defaultdict
 
 from django import forms
+from django.conf import settings
 from django.contrib import messages
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from froide.foirequest.models import FoiRequest
 from froide.helper.email_sending import send_mail
 from froide.helper.spam import SpamProtectionMixin
 
+from .forms import ExamUploadForm
 from .models import Curriculum, ExamRequest, PrivateCopy, State
 from .utils import MAX_YEAR, YEARS, SubjectYear
 
@@ -170,3 +174,39 @@ Das Team von FragDenStaat""".format(url)
     return render(
         request, "froide_exam/request_private_copy.html", context={"form": form}
     )
+
+
+def upload_exams(request):
+    from froide.upload.forms import get_uppy_i18n
+
+    if not request.user.has_perm("froide_exam.add_examrequest"):
+        raise PermissionDenied
+
+    if request.method == "POST":
+        form = ExamUploadForm(request.POST)
+        if form.is_valid():
+            form.save(request.user)
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                _("Exams added."),
+            )
+            return redirect(request.get_full_path())
+    else:
+        form = ExamUploadForm()
+
+    config = json.dumps(
+        {
+            "settings": {
+                "tusChunkSize": settings.DATA_UPLOAD_MAX_MEMORY_SIZE - (500 * 1024)
+            },
+            "i18n": {
+                "uppy": get_uppy_i18n(),
+            },
+            "url": {
+                "tusEndpoint": reverse("api:upload-list"),
+            },
+        }
+    )
+
+    return render(request, "froide_exam/upload.html", {"form": form, "config": config})
