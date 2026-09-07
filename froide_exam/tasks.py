@@ -1,6 +1,9 @@
 import logging
 from pathlib import PurePath
 
+from django.conf import settings
+from django.contrib.auth import get_user_model
+
 from filingcabinet.models import CollectionDocument
 from filingcabinet.utils import ensure_directory_exists, get_existing_directories
 
@@ -10,6 +13,8 @@ from froide.document.models import DocumentCollection
 from .models import ExamRequest
 
 logger = logging.getLogger(__name__)
+
+User = get_user_model()
 
 
 @celery_app.task(name="froide_exam.tasks.populate_document_collection", time_limit=60)
@@ -47,3 +52,22 @@ def populate_document_collection(collection_id, exam_requests=None):
                 collection=collection,
                 document=document,
             )
+
+
+@celery_app.task(name="froide_exam.tasks.store_exam_uploads")
+def store_exam_upload(er_id, upload_urls, user_id):
+    from froide.document.services import UploadDocumentStorer
+
+    user = User.objects.get(id=user_id)
+    er = ExamRequest.objects.get(id=er_id)
+
+    storer = UploadDocumentStorer(user, public=True)
+
+    all_docs = []
+
+    for upload_url in upload_urls:
+        if docs := storer.create_from_upload_url(upload_url):
+            all_docs += docs
+
+    er.documents.add(*all_docs)
+    populate_document_collection(settings.FROIDE_EXAM_DOCUMENTCOLLECTION, [er_id])
