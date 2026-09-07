@@ -1,6 +1,5 @@
-from datetime import date
-
 from django.contrib import admin, messages
+from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
@@ -86,7 +85,7 @@ class ExamRequestAdmin(admin.ModelAdmin):
 
     @admin.action(description=_("Set end year to current year"))
     def set_end_year_to_current(self, request, queryset):
-        end_year = date.today().replace(month=12, day=31)
+        end_year = timezone.now().year
         queryset.update(end_year=end_year)
 
     def set_not_publishable(self, request, queryset, not_publishable):

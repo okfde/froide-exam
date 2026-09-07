@@ -31,7 +31,7 @@ def populate_document_collection(collection_id, exam_requests=None):
             er.curriculum.state.name,
             er.curriculum.name,
             er.subject.name,
-            str(er.start_year.year),
+            str(er.start_year),
         )
         doc_path = (
             dir_path / "file.pdf"

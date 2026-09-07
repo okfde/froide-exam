@@ -1,7 +1,6 @@
 import unicodedata
 import zipfile
 from collections import defaultdict
-from datetime import date
 from pathlib import PurePath
 
 from django.core.management.base import BaseCommand
@@ -86,7 +85,7 @@ class Command(BaseCommand):
             exam_request = ExamRequest.objects.create(
                 curriculum=curricula[state][curriculum],
                 subject=subjects[subject],
-                start_year=date(int(year), 1, 1),
+                start_year=int(year),
             )
 
             exam_request.documents.set(docs)

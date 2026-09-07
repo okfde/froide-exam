@@ -72,8 +72,8 @@ class Curriculum(models.Model):
 
     state = models.ForeignKey(State, null=True, on_delete=models.SET_NULL)
 
-    start_year = models.DateField(null=True, blank=True)
-    end_year = models.DateField(null=True, blank=True)
+    start_year = models.PositiveIntegerField(null=True, blank=True)
+    end_year = models.PositiveIntegerField(null=True, blank=True)
 
     subjects = models.ManyToManyField(Subject)
 
@@ -92,8 +92,8 @@ class Curriculum(models.Model):
         return self.__str__()
 
     def get_min_max_year(self):
-        min_year = self.start_year.year if self.start_year else MIN_YEAR
-        max_year = self.end_year.year if self.end_year else MAX_YEAR
+        min_year = self.start_year or MIN_YEAR
+        max_year = self.end_year or MAX_YEAR
         return min_year, max_year
 
     def is_valid_year(self, year):
@@ -105,8 +105,8 @@ class ExamRequest(models.Model):
     subject = models.ForeignKey(
         Subject, null=True, blank=True, on_delete=models.SET_NULL
     )
-    start_year = models.DateField()
-    end_year = models.DateField(null=True, blank=True)
+    start_year = models.PositiveIntegerField()
+    end_year = models.PositiveIntegerField(null=True, blank=True)
     curriculum = models.ForeignKey(
         Curriculum, null=True, blank=True, on_delete=models.SET_NULL
     )
@@ -131,8 +131,8 @@ class ExamRequest(models.Model):
 
     def get_years(self):
         if self.end_year is not None:
-            return list(range(self.start_year.year, self.end_year.year + 1))
-        return [self.start_year.year]
+            return list(range(self.start_year, self.end_year + 1))
+        return [self.start_year]
 
 
 class PrivateCopy(models.Model):
