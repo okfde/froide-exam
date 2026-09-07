@@ -102,14 +102,10 @@ class Curriculum(models.Model):
 
 
 class ExamRequest(models.Model):
-    subject = models.ForeignKey(
-        Subject, null=True, blank=True, on_delete=models.SET_NULL
-    )
+    subject = models.ForeignKey(Subject, null=True, on_delete=models.PROTECT)
     start_year = models.PositiveIntegerField()
     end_year = models.PositiveIntegerField(null=True, blank=True)
-    curriculum = models.ForeignKey(
-        Curriculum, null=True, blank=True, on_delete=models.SET_NULL
-    )
+    curriculum = models.ForeignKey(Curriculum, on_delete=models.PROTECT)
 
     url = models.URLField(blank=True)
     timestamp = models.DateTimeField(blank=True, null=True, default=timezone.now)
